@@ -1,7 +1,13 @@
 <template>
-  <div>
-      BreathingExerciseOverview
-  </div>
+    <div>
+        <v-btn outlined block color="primary" to="/breathingexercise/cpstatistics">
+            CP Metingen statistieken
+        </v-btn>
+        <v-btn outlined block color="primary" to="/breathingexercise/list">
+            Oefeningen
+        </v-btn>
+        BreathingExerciseOverview
+    </div>
 </template>
 
 <script>
@@ -11,6 +17,9 @@ export default {
         return {
             
         }
+    },
+    created() {
+        this.$store.dispatch('setDefaultAppbar');
     }
 }
 </script>

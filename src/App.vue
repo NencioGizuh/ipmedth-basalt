@@ -2,7 +2,7 @@
   <v-app>
     <app-bar />
     
-    <v-main>
+    <v-main class="main">
       <router-view />
     </v-main>
 
@@ -23,5 +23,8 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+    .main {
+        margin: 1rem;
+    }
 </style>

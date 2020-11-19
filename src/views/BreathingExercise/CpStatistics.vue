@@ -1,7 +1,10 @@
 <template>
-  <div>
-      CpStatistics
-  </div>
+    <div>
+        <v-btn outlined block color="primary" to="/breathingexercise/cpmeasurement">
+            CP Meten
+        </v-btn>
+        CpStatistics
+    </div>
 </template>
 
 <script>
@@ -11,7 +14,15 @@ export default {
         return {
             
         }
-    }
+    },
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            vm.$store.dispatch('setAppbarDetails', {
+                appbarText: "CP Metingen",
+                appbarCloseRoute: "/breathingexercise",
+            });
+        });
+    },
 }
 </script>
 

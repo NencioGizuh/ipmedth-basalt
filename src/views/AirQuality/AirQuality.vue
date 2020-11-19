@@ -12,7 +12,15 @@ export default {
         return {
             
         }
-    }
+    },
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            vm.$store.dispatch('setAppbarDetails', {
+                appbarText: "Luchtkwaliteit",
+                appbarCloseRoute: "/dashboard",
+            });
+        });
+    },
 }
 </script>
 

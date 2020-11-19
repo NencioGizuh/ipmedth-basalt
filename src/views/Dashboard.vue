@@ -1,7 +1,7 @@
 <template>
-  <div>
-      Dashboard
-  </div>
+    <div>
+        Dashboard
+    </div>
 </template>
 
 <script>
@@ -11,6 +11,9 @@ export default {
         return {
             
         }
+    },
+    created() {
+        this.$store.dispatch('setDefaultAppbar');
     }
 }
 </script>

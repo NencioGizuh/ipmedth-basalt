@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation app shift>
+  <v-bottom-navigation v-if="isAuth && showDefaultAppbar" app shift>
         <v-btn color="primary" text min-width="20%" to="/dashboard">
             <span class="nav-span">Dashboard</span>
             <v-icon>mdi-view-dashboard</v-icon>
@@ -28,9 +28,17 @@
 </template>
 
 <script>
-export default {
-    name: "BottomNavigation",
-}
+    export default {
+        name: "BottomNavigation",
+        computed: {
+            isAuth() {
+                return this.$store.getters.isAuthenticated;
+            },
+            showDefaultAppbar() {
+                return this.$store.getters.getDefaultAppbar;
+            },
+        }
+    }
 </script>
 
 <style lang="scss" scoped>

@@ -11,7 +11,15 @@ export default {
         return {
             
         }
-    }
+    },
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            vm.$store.dispatch('setAppbarDetails', {
+                appbarText: "Triggers beheren",
+                appbarCloseRoute: "/account",
+            });
+        });
+    },
 }
 </script>
 
