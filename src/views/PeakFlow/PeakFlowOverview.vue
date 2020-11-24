@@ -8,7 +8,11 @@
         <v-card class="mt-3">
             <v-card-title>Laatste metingen</v-card-title>
             <v-card-text>
-                <v-row v-for="peakflow in getPeakFlow.slice(0, showMeasurements)" :key="peakflow.id">
+                <v-row 
+                    v-for="peakflow in getPeakFlow.slice(0, showMeasurements)" 
+                    :key="peakflow.id" 
+                    @click="goToMeasurement(peakflow.id)"
+                >
                     <v-col cols="4">
                         <peak-flow-measurement-circle :value="Math.max(peakflow.measurementOne, peakflow.measurementTwo, peakflow.measurementThree)" />
                     </v-col>
@@ -56,6 +60,11 @@ export default {
             return this.$store.getters.getPeakFlow;
         },
     },
+    methods: {
+        goToMeasurement(peakflowId) {
+            this.$router.push(`/peakflow/${peakflowId}`)
+        }
+    }
 }
 </script>
 

@@ -28,7 +28,6 @@ export default {
 <style lang="scss" scoped>
     .circle {
         width: 100%;
-        max-width: 110px;
         padding-top: 100%;
         border-radius: 50%;
         position: relative;

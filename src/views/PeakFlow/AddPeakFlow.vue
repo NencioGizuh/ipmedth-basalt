@@ -114,18 +114,21 @@
                         label="Meting 1"
                         outlined
                         :rules="required"
+                        type="number"
                     />
                     <v-text-field
                         v-model="measurementTwo"
                         label="Meting 2"
                         outlined
                         :rules="required"
+                        type="number"
                     />
                     <v-text-field
                         v-model="measurementThree"
                         label="Meting 3"
                         outlined
                         :rules="required"
+                        type="number"
                     />
                 </v-card-text>
             </v-card>

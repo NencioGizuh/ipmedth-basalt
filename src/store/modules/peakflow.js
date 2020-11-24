@@ -1,5 +1,6 @@
 const state = {
     peakflow: [],
+    peakflowById: {},
     zoneGreen: null,
     zoneYellow: null,
     zoneRed: null,
@@ -14,6 +15,9 @@ const mutations = {
         state.zoneYellow = data.zoneYellow;
         state.zoneRed = data.zoneRed;
     },
+    setPeakFlowById(state, data) {
+        state.peakflowById = data;
+    }
 };
 
 const actions = {
@@ -29,6 +33,7 @@ const actions = {
                 measurementOne: "632",
                 measurementTwo: "620",
                 measurementThree: "600",
+                takenMedicines: false,
                 explanation: "Ik voel me prima"
             },
             {
@@ -38,6 +43,7 @@ const actions = {
                 measurementOne: "432",
                 measurementTwo: "420",
                 measurementThree: "400",
+                takenMedicines: true,
                 explanation: "Het gaat beter"
             },
             {
@@ -47,6 +53,7 @@ const actions = {
                 measurementOne: "190",
                 measurementTwo: "180",
                 measurementThree: "185",
+                takenMedicines: false,
                 explanation: "Ik heb het heel benauwd"
             },
             {
@@ -56,6 +63,7 @@ const actions = {
                 measurementOne: "390",
                 measurementTwo: "380",
                 measurementThree: "388",
+                takenMedicines: true,
                 explanation: "Ik heb het benauwd"
             },
             {
@@ -65,6 +73,7 @@ const actions = {
                 measurementOne: "632",
                 measurementTwo: "645",
                 measurementThree: "628",
+                takenMedicines: false,
                 explanation: "Ik voel me prima"
             },
             {
@@ -74,6 +83,7 @@ const actions = {
                 measurementOne: "432",
                 measurementTwo: "462",
                 measurementThree: "400",
+                takenMedicines: true,
                 explanation: "Het gaat beter"
             },
             {
@@ -83,6 +93,7 @@ const actions = {
                 measurementOne: "177",
                 measurementTwo: "170",
                 measurementThree: "173",
+                takenMedicines: false,
                 explanation: "Ik heb het heel benauwd"
             },
             {
@@ -92,6 +103,7 @@ const actions = {
                 measurementOne: "390",
                 measurementTwo: "350",
                 measurementThree: "375",
+                takenMedicines: true,
                 explanation: "Ik heb het benauwd"
             },
         ];
@@ -108,6 +120,10 @@ const actions = {
 
         commit('setPeakFlowZones', zones);
     },
+    setPeakFlowById({ commit, state }, id) {
+        const peakflowById = state.peakflow.find(pk => pk.id === Number(id));
+        commit("setPeakFlowById", peakflowById);
+    },
 };
 
 const getters = {
@@ -123,6 +139,9 @@ const getters = {
     getPeakFlowZoneRed(state) {
         return state.zoneRed;
     },
+    getPeakFlowById(state) {
+        return state.peakflowById;
+    }
 };
 
 export default {state, mutations, actions, getters};
