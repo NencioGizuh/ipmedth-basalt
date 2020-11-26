@@ -1,0 +1,17 @@
+{
+  "appId": "basalt.revalidatie.app",
+  "appName": "ipmedth-basalt",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist",
+  "server": {
+    "url": "http://192.168.10.11:8080",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

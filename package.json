@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "chart.js": "^2.9.4",
+    "@capacitor/android": "^2.4.3",
+    "@capacitor/cli": "^2.4.3",
+    "@capacitor/core": "^2.4.3",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "node-sass": "^5.0.0",
