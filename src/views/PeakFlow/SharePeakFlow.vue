@@ -17,7 +17,7 @@ export default {
         next(vm => {
             vm.$store.dispatch('setAppbarDetails', {
                 appbarText: "Peak flow meting delen",
-                appbarCloseRoute: "/peakflow",
+                appbarCloseRoute: from.path,
             });
         });
     },
