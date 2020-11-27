@@ -74,7 +74,7 @@
                         <li>Je gebruikt je medicatie meer dan 2 keer per dag.</li>
                     </ul>
                     <p class="mt-3">
-                        Peak flow waarde is tussen de <strong>{{getPeakFlowZoneGreen-1}} en {{getPeakFlowZoneYellow}} l/min <strong>
+                        Peak flow waarde is tussen de <strong>{{getPeakFlowZoneGreen-1}} en {{getPeakFlowZoneYellow}} l/min </strong>
                     </p>
                     <!-- TODO: Describe medicines -->
                     <p class="mb-0">Neem rust en wacht tot de symptomen verbeteren. Als de symptomen na 48 uur niet verbeteren, ga dan door naar zone oranje!</p>
