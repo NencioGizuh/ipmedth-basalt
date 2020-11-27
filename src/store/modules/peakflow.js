@@ -1,9 +1,19 @@
 const state = {
     peakflow: [],
     peakflowById: {},
-    zoneGreen: null,
-    zoneYellow: null,
-    zoneRed: null,
+    zoneGreenPeakFlowBeforeMedicines: 600,
+    zoneGreenPeakFlowAfterMedicines: null,
+    zoneGreenExplanation: null,
+    zoneYellowPeakFlowBelow: 599,
+    zoneYellowPeakFlowAbove: 400,
+    zoneYellowMedicines: null,
+    zoneYellowExplanation: null,
+    phoneNumberGP: null,
+    phoneNumberLungSpecialist: null,
+    zoneOrangeExplanation: null,
+    zoneRedPeakFlow: 200,
+    zoneRedMedicines: null,
+    zoneRedExplanation: null,
 };
 
 const mutations = {
@@ -11,18 +21,23 @@ const mutations = {
         state.peakflow = data;
     },
     setPeakFlowZones(state, data) {
-        state.zoneGreen = data.zoneGreen;
-        state.zoneYellow = data.zoneYellow;
-        state.zoneRed = data.zoneRed;
+        state.zoneGreenPeakFlowBeforeMedicines = data.zoneGreenPeakFlowBeforeMedicines;
+        state.zoneYellowPeakFlowAbove = data.zoneYellowPeakFlowAbove;
+        state.zoneRedPeakFlow = data.zoneRedPeakFlow;
     },
     setPeakFlowById(state, data) {
         state.peakflowById = data;
+    },
+    setActionPlan(state, data) {
+        for (const prop in data) {
+            state[prop] = data[prop];
+        }
     }
 };
 
 const actions = {
-    setPeakFlow({commit, dispatch}) {
-        dispatch("setPeakFlowZones");
+    setPeakFlow({commit}) {
+        // dispatch("setPeakFlowZones");
         
         // TODO: Retrieve from database
         const peakflow = [
@@ -113,9 +128,9 @@ const actions = {
     setPeakFlowZones({commit}) {
         // TODO: Retrieve from database
         const zones = {
-            zoneGreen: 600,
-            zoneYellow: 400,
-            zoneRed: 200,
+            zoneGreenPeakFlowBeforeMedicines: 600,
+            zoneYellowPeakFlowAbove: 400,
+            zoneRedPeakFlow: 200,
         };
 
         commit('setPeakFlowZones', zones);
@@ -124,24 +139,48 @@ const actions = {
         const peakflowById = state.peakflow.find(pk => pk.id === Number(id));
         commit("setPeakFlowById", peakflowById);
     },
+    setActionPlanFromDatabase() {
+        // TODO: Retrieve from database
+    },
+    setActionPlan({ commit }, data) {
+        commit("setActionPlan", data);
+    },
 };
 
 const getters = {
     getPeakFlow(state) {
         return state.peakflow;
     },
-    getPeakFlowZoneGreen(state) {
-        return state.zoneGreen;
-    },
-    getPeakFlowZoneYellow(state) {
-        return state.zoneYellow;
-    },
-    getPeakFlowZoneRed(state) {
-        return state.zoneRed;
-    },
     getPeakFlowById(state) {
         return state.peakflowById;
-    }
+    },
+    getPeakFlowZoneGreen(state) {
+        return state.zoneGreenPeakFlowBeforeMedicines;
+    },
+    getPeakFlowZoneYellow(state) {
+        return state.zoneYellowPeakFlowAbove;
+    },
+    getPeakFlowZoneRed(state) {
+        return state.zoneRedPeakFlow;
+    },
+    getActionPlan(state) {
+        const filteredState = Object.keys(state)
+            .filter(key => {
+                if (key === "peakflow" || key === "peakflowById") return false;
+                return true;
+            })
+            .reduce((obj, key) => {
+                obj[key] = state[key];
+                return obj;
+            }, {});
+        return filteredState;
+    },
+    getPhoneNumberGP() {
+        return state.phoneNumberGP;
+    },
+    getPhoneNumberLungSpecialist() {
+        return state.phoneNumberLungSpecialist;
+    },
 };
 
 export default {state, mutations, actions, getters};
