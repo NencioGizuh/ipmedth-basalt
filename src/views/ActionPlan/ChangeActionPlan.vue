@@ -75,12 +75,14 @@
                         v-model="phoneNumberGP"
                         outlined 
                         dense
+                        type="number"
                     />
                     <p class="mb-1">Telefoonnummer longarts</p>
                     <v-text-field
                         v-model="phoneNumberLungSpecialist"
                         outlined 
                         dense
+                        type="number"
                     />
                     <p class="mb-1">Overige opmerkingen/afspraken</p>
                     <v-textarea
