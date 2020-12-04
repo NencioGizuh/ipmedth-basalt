@@ -66,7 +66,6 @@ export default {
   methods:{
     fillData () {
       this.fillChartData();
-
       this.datacollection = {
         labels: this.labels,
         datasets: this.datasets
@@ -81,10 +80,7 @@ export default {
       for (i = 0; i < 6; i++){
         this.labels[i] = ((dag + i));
       }
-      var j = 0;
-      for (j = 0; j < this.medicijnen_tijden.length; j++){
-        console.log(this.datasets);
-        console.log(j);
+      for (let j = 0; j < this.medicijnen_tijden.length; j++){
         this.datasets.push( {
           label: this.medicijnen_tijden[j].title,
           backgroundColor: '#008ACC',
