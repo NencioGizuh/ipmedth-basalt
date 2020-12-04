@@ -61,6 +61,14 @@ export default {
       } 
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+        vm.$store.dispatch('setAppbarDetails', {
+            appbarText: "Medicatie registeren",
+            appbarCloseRoute: "/medication",
+        });
+    });
+  }
 };
 </script>
 

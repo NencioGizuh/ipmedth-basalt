@@ -35,7 +35,15 @@ export default {
         currentMedicijn (medicijn){
             this.$store.commit("currentMedicijn", medicijn.title);
         }
-    }
+    },
+      beforeRouteEnter (to, from, next) {
+    next(vm => {
+        vm.$store.dispatch('setAppbarDetails', {
+            appbarText: "Medicatie registeren",
+            appbarCloseRoute: "/medication",
+        });
+    });
+  }
 }
 </script>
 
