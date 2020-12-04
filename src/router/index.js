@@ -20,7 +20,9 @@ import CpMeasurement from "@/views/BreathingExercise/CpMeasurement.vue";
 import CpStatistics from "@/views/BreathingExercise/CpStatistics.vue";
 
 import AddMedication from "@/views/Medication/AddMedication.vue";
-import MedicationOverview from "@/views/Medication//MedicationOverview.vue";
+import MedicationOverview from "@/views/Medication/MedicationOverview.vue";
+import MedicationDoing from "@/views/Medication/MedicationDoing.vue";
+import MedicationHelp from "@/views/Medication/MedicationHelp.vue";
 
 import AddPeakFlow from "@/views/PeakFlow/AddPeakFlow.vue";
 import PeakFlowMeasurement from "@/views/PeakFlow/PeakFlowMeasurement.vue";
@@ -53,6 +55,8 @@ const routes = [
     { path: "/breathingexercise/cpstatistics", component: CpStatistics },
     { path: "/medication/add", component: AddMedication },
     { path: "/medication", component: MedicationOverview },
+    { path: "/medication/doing", component: MedicationDoing },
+    { path: "/medication/help", component: MedicationHelp },
     { path: "/peakflow/add", component: AddPeakFlow },
     { path: "/peakflow/:peak_flow_id", component: PeakFlowMeasurement },
     { path: "/peakflow", component: PeakFlowOverview },
