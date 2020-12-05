@@ -8,8 +8,8 @@
             <div class="display-3">
               <img :src="images[i]" />
             </div>
-            <div class="display_55">
-              <h6> {{ slide }} </h6>
+            <div class="medicatue_hulp_display">
+              <h5> {{ slide }} </h5>
               
             </div>
           </v-row>
@@ -58,8 +58,8 @@ export default {
   },
   methods:{
     changeIcon(){ 
-      var ind;
-      for (ind = 0; ind < this.slides.length; ind++) {
+
+      for (var ind = 0; ind < this.slides.length; ind++) {
         var elem_icon = parseInt(document.getElementsByClassName("v-icon notranslate mdi mdi-numeric-0 theme--dark")[0].parentElement.parentElement.value);
         document.getElementsByClassName("v-icon notranslate mdi mdi-numeric-0 theme--dark")[0].className = "v-icon notranslate mdi mdi-numeric-"+(elem_icon+1) +" theme--dark";
       }
@@ -71,9 +71,11 @@ export default {
     },
   },
     mounted() { 
-      if (document.readyState == "complete") {  
-          this.changeIcon();
-      } 
+      this.$nextTick(() => this.changeIcon());
+  },
+  destroyed(){
+    this.changeIcon();
+    alert("updated");
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -90,10 +92,10 @@ export default {
 .v-btn--outlined .v-btn__content .v-icon, .v-btn--round .v-btn__content .v-icon {
     color: black;
 }
-.display_55{
+.medicatue_hulp_display{
   font-size: 18px;
   color: black;
-  line-height: 20px;
+  line-height: 24px;
   padding: 0 50px; 
   margin-top: -110px;
 }
