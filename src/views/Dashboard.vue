@@ -1,23 +1,22 @@
 <template>
-    <div>
-        Dashboard
-    </div>
+  <div>
+    <airquality-overview></airquality-overview>
+  </div>
 </template>
 
 <script>
+import AirqualityOverview from '../components/Airquality/AirqualityOverview.vue'
 export default {
-    name: "Dashboard",
-    data() {
-        return {
-            
-        }
-    },
-    created() {
-        this.$store.dispatch('setDefaultAppbar');
-    }
-}
+  name: "Dashboard",
+  data() {
+    return {
+    };
+  },
+  components: {
+    'airquality-overview': AirqualityOverview
+  },
+};
 </script>
 
 <style lang="scss">
-
 </style>

@@ -12,7 +12,6 @@ import ChangeActionPlan from "@/views/ActionPlan/ChangeActionPlan.vue";
 
 import AirConcentration from "@/views/AirQuality/AirConcentration.vue";
 import AirQuality from "@/views/AirQuality/AirQuality.vue";
-import AirQualityIndex from "@/views/AirQuality/AirQualityIndex.vue";
 
 import BreathingExerciseOverview from "@/views/BreathingExercise/BreathingExerciseOverview.vue";
 import BreathingExercisesList from "@/views/BreathingExercise/BreathingExercisesList.vue";
@@ -48,7 +47,6 @@ const routes = [
     { path: "/actionplan/change", component: ChangeActionPlan },
     { path: "/dashboard/:name_of_city/concentration/:name_of_concentration", component: AirConcentration },
     { path: "/dashboard/:name_of_city/airquality", component: AirQuality },
-    { path: "/dashboard/airquality/index", component: AirQualityIndex },
     { path: "/breathingexercise", component: BreathingExerciseOverview },
     { path: "/breathingexercise/list", component: BreathingExercisesList },
     { path: "/breathingexercise/cpmeasurement", component: CpMeasurement },
