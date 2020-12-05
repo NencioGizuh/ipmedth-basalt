@@ -14,7 +14,9 @@
           }}</v-card-title>
           <v-card-subtitle>{{ currentDate }}, lokale tijd</v-card-subtitle>
         </v-list-item-content>
-        <v-progress-circular @click="airQualityIndex" :color="colorStroke" :value="100" :size="75">{{ currentConcentration }}</v-progress-circular>
+        <v-progress-circular @click="airQualityIndex" :color="colorStroke" :value="100" :size="75"> 
+            <div class="text">{{ currentConcentration }}</div>
+        </v-progress-circular>
       </v-list-item>
       <div class="text-center">
         <v-btn-toggle
@@ -447,4 +449,7 @@ export default {
 </script>
 
 <style lang="scss">
+  .text {
+      color:black;
+  }
 </style>

@@ -19,9 +19,11 @@
           }}</v-card-title>
           <v-card-subtitle>{{ currentDate }}, lokale tijd</v-card-subtitle>
         </v-list-item-content>
-        <v-progress-circular :color="colorStroke" :value="100" :size="75">{{
+        <v-progress-circular :color="colorStroke" :value="100" :size="75">
+            <div class="text">{{
           currentConcentration
-        }}</v-progress-circular>
+        }}</div>
+        </v-progress-circular>
       </v-list-item>
       <bar
         :styles="myStyles"
@@ -36,6 +38,7 @@
       height="221"
       type="list-item-three-line, card-avatar"
     ></v-skeleton-loader>
+    <v-container><v-btn fab small :style="{left: '50%', transform:'translateX(-50%)'}"><v-icon>mdi-plus</v-icon></v-btn></v-container>
   </div>
 </template>
 
@@ -347,4 +350,7 @@ export default {
 </script>
 
 <style>
+  .text {
+      color:black;
+  }
 </style>
