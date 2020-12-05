@@ -10,7 +10,6 @@
             </div>
             <div class="medicatue_hulp_display">
               <h5> {{ slide }} </h5>
-              
             </div>
           </v-row>
         </v-sheet>
@@ -58,7 +57,6 @@ export default {
   },
   methods:{
     changeIcon(){ 
-
       for (var ind = 0; ind < this.slides.length; ind++) {
         var elem_icon = parseInt(document.getElementsByClassName("v-icon notranslate mdi mdi-numeric-0 theme--dark")[0].parentElement.parentElement.value);
         document.getElementsByClassName("v-icon notranslate mdi mdi-numeric-0 theme--dark")[0].className = "v-icon notranslate mdi mdi-numeric-"+(elem_icon+1) +" theme--dark";
