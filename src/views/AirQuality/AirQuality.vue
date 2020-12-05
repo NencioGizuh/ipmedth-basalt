@@ -14,20 +14,20 @@
           }}</v-card-title>
           <v-card-subtitle>{{ currentDate }}, lokale tijd</v-card-subtitle>
         </v-list-item-content>
-        <v-progress-circular @click="airQualityIndex" :color="colorStroke" :value="100" :size="75"> 
+        <v-progress-circular :color="colorStroke" :value="100" :size="75"> 
             <div class="text">{{ currentConcentration }}</div>
         </v-progress-circular>
       </v-list-item>
       <div class="text-center">
         <v-btn-toggle
-          color="deep-purple accent-3"
+          color="blue darken-2"
           group
           v-model="concentrationChange"
         >
-          <v-btn value="lki"> LKI </v-btn>
-          <v-btn value="no2"> NO2 </v-btn>
-          <v-btn value="pm10"> PM10 </v-btn>
-          <v-btn value="o3"> O3 </v-btn>
+          <v-btn class="pr-5 pl-5" value="lki"> LKI </v-btn>
+          <v-btn class="pr-5 pl-5" value="no2"> NO2 </v-btn>
+          <v-btn class="pr-5 pl-5" value="pm10"> PM10 </v-btn>
+          <v-btn class="pr-5 pl-5" value="o3"> O3 </v-btn>
         </v-btn-toggle>
       </div>
       <overview-bar
@@ -130,9 +130,6 @@ export default {
         OverviewBar
     },
     methods: {
-    airQualityIndex() {
-        this.$router.push("/dashboard/airquality/index");
-    },
     //Deze functie zorgt voor het individueel kleuren geven van data in de barchart per concentratie
     decideConcentration(concentrationName, concentrationValue) {
         switch(concentrationName) {

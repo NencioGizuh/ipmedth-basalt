@@ -1,6 +1,12 @@
 <template>
   <div>
-      AirQualityIndex
+      <h1>Luchtmeet LKI</h1>
+      <p>De luchtmeetnet LKi neemt alle concentraties
+        die mogelijk schade kunnen veroorzaken aan
+        Uw gezondheid op in het cijfer dat de 
+        luchtkwaliteit bepaalt 
+      </p>
+
   </div>
 </template>
 

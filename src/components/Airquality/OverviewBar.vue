@@ -40,7 +40,7 @@ export default {
               ticks: {
                 beginAtZero: true
               },
-              display: false, //this will remove all the x-axis grid lines hallo
+              display: false, //this will remove all the x-axis grid lines 
             },
           ],
           xAxes: [

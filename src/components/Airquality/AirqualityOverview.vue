@@ -246,8 +246,8 @@ export default {
             } else {
               vm.colorScheme(element.value);
               vm.chartdata.labels.push(
-                moment(element.timestamp_measured).format("YYYY-MM-DD HH:mm")
-              );
+                  moment(element.timestamp_measured).format("YYYY-MM-DD HH:mm")
+               );
               vm.chartdata.datasets[0].backgroundColor.push(vm.color);
               vm.chartdata.datasets[0].data.push(element.value);
             }
