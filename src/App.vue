@@ -13,7 +13,6 @@
 <script>
     import AppBar from "@/components/AppBar.vue"
     import BottomNavigation from "@/components/BottomNavigation.vue";
-
     export default {
         name: 'App',
         components: {
