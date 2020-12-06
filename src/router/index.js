@@ -15,8 +15,17 @@ import AirQuality from "@/views/AirQuality/AirQuality.vue";
 
 import BreathingExerciseOverview from "@/views/BreathingExercise/BreathingExerciseOverview.vue";
 import BreathingExercisesList from "@/views/BreathingExercise/BreathingExercisesList.vue";
-import CpMeasurement from "@/views/BreathingExercise/CpMeasurement.vue";
-import CpStatistics from "@/views/BreathingExercise/CpStatistics.vue";
+
+import CpMeasurement from "@/views/BreathingExercise/CpMeasurement/CpMeasurement.vue";
+import CP1 from "@/views/BreathingExercise/CpMeasurement/CP1.vue";
+import CP1start from "@/views/BreathingExercise/CpMeasurement/CP1start.vue";
+import CP2 from "@/views/BreathingExercise/CpMeasurement/CP2.vue";
+import CP2start from "@/views/BreathingExercise/CpMeasurement/CP2start.vue";
+import CpStatistics from "@/views/BreathingExercise/CpMeasurement/CpStatistics.vue";
+
+import IntervalExplanation from "@/views/BreathingExercise/Interval/IntervalExplanation.vue";
+import IntervalCountdown from "@/views/BreathingExercise/Interval/IntervalCountdown.vue";
+import IntervalRuntime from "@/views/BreathingExercise/Interval/IntervalRuntime.vue";
 
 import AddMedication from "@/views/Medication/AddMedication.vue";
 import MedicationOverview from "@/views/Medication/MedicationOverview.vue";
@@ -49,7 +58,16 @@ const routes = [
     { path: "/dashboard/:name_of_city/airquality", component: AirQuality },
     { path: "/breathingexercise", component: BreathingExerciseOverview },
     { path: "/breathingexercise/list", component: BreathingExercisesList },
+    //Interval
+    { path: "/breathingexercise/list/interval", component: IntervalExplanation },
+    { path: "/breathingexercise/list/interval/countdown", component: IntervalCountdown },
+    { path: "/breathingexercise/list/interval/runtime", component: IntervalRuntime },
+    //CP Meting
     { path: "/breathingexercise/cpmeasurement", component: CpMeasurement },
+    { path: "/breathingexercise/cpmeasurement/CP1", component: CP1 },
+    { path: "/breathingexercise/cpmeasurement/CP1/CP1start", component: CP1start },
+    { path: "/breathingexercise/cpmeasurement/CP2", component: CP2 },
+    { path: "/breathingexercise/cpmeasurement/CP2/CP2start", component: CP2start },
     { path: "/breathingexercise/cpstatistics", component: CpStatistics },
     { path: "/medication/add", component: AddMedication },
     { path: "/medication", component: MedicationOverview },
