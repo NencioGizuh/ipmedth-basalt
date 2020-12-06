@@ -9,7 +9,7 @@
       <v-list-item three-line>
         <v-list-item-content>
           <v-card-title class="overline caption mt-n3 mb-n9"
-            >{{ location
+            >{{ locationUser
             }}<v-icon color="black" class="ml-1"
               >mdi-crosshairs-gps</v-icon
             ></v-card-title
@@ -144,13 +144,14 @@ export default {
         }
     },
     getGeolocationMobile() {
+        var vm = this;
         return new Promise((resolve, reject) => {
             Geolocation.getCurrentPosition()
                 .then(function (response) {
                 resolve(response);
                 console.log(response);
-                this.$store.state.longitude = response.coords.longitude;
-                this.$store.state.latitude = response.coords.latitude;
+                vm.$store.state.longitude = response.coords.longitude;
+                vm.$store.state.latitude = response.coords.latitude;
             })
             .catch(function (error) {
                 reject(error);
@@ -204,10 +205,10 @@ export default {
             for (let index = 0; index < element.locations.length; index++) {
               const location = element.locations[index];
               console.log(location);
-              vm.$store.state.location = location.street;
+              vm.$store.state.locationUser = location.street;
               vm.$store.state.fullLocation =
                 location.street + ", " + location.adminArea5;
-              console.log(vm.$store.state.location);
+              console.log(vm.$store.state.locationUser);
             }
           }
         })
@@ -260,7 +261,8 @@ export default {
         });
     },
     overviewConcentration() {
-      const path = "/dashboard/" + `${this.location}` + "/airquality";
+      var vm = this;
+      const path = "/dashboard/" + `${vm.$store.state.locationUser}` + "/airquality";
       this.$router.push(path);
     },
     colorScheme(colorValue) {
@@ -325,8 +327,8 @@ export default {
         position: "relative",
       };
     },
-    location() {
-      return this.$store.state.location;
+    locationUser() {
+      return this.$store.state.locationUser;
     },
     currentAirquality() {
       return this.$store.state.currentAirquality;
