@@ -1,7 +1,7 @@
 const state = {
     latitude: 0,
     longitude: 0,
-    location: "",
+    locationUser: "Location",
     fullLocation: "",
     colorStroke: "",
     currentConcentration: 0,

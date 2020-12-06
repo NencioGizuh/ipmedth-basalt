@@ -4,7 +4,7 @@
       <v-list-item three-line>
         <v-list-item-content class="mb-n4">
           <v-card-title class="overline mt-n3 mb-n9"
-            >{{ location
+            >{{ locationUser
             }}<v-icon color="black" class="ml-1"
               >mdi-crosshairs-gps</v-icon
             ></v-card-title
@@ -14,7 +14,7 @@
           }}</v-card-title>
           <v-card-subtitle>{{ currentDate }}, lokale tijd</v-card-subtitle>
         </v-list-item-content>
-        <v-progress-circular :color="colorStroke" :value="100" :size="75"> 
+        <v-progress-circular @click="airQualityIndex" :color="colorStroke" :value="100" :size="75"> 
             <div class="text">{{ currentConcentration }}</div>
         </v-progress-circular>
       </v-list-item>
@@ -27,7 +27,7 @@
           <v-btn class="pr-5 pl-5" value="lki"> LKI </v-btn>
           <v-btn class="pr-5 pl-5" value="no2"> NO2 </v-btn>
           <v-btn class="pr-5 pl-5" value="pm10"> PM10 </v-btn>
-          <v-btn class="pr-5 pl-5" value="o3"> O3 </v-btn>
+          <v-btn value="o3"> O3 </v-btn>
         </v-btn-toggle>
       </div>
       <overview-bar
@@ -130,6 +130,9 @@ export default {
         OverviewBar
     },
     methods: {
+    airQualityIndex() {
+        this.$router.push("/dashboard/airquality/index");
+    },
     //Deze functie zorgt voor het individueel kleuren geven van data in de barchart per concentratie
     decideConcentration(concentrationName, concentrationValue) {
         switch(concentrationName) {
@@ -384,8 +387,8 @@ export default {
       }
     },
     computed: {
-        location() {
-            return this.$store.state.location;
+        locationUser() {
+            return this.$store.state.locationUser;
         },
         currentAirquality() {
             return this.$store.state.currentAirquality;
