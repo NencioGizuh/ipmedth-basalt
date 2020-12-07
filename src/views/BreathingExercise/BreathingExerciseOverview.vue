@@ -44,14 +44,11 @@
 </template>
 
 <script>
-import Vuetify from "vuetify";
-
 export default {
   name: "BreathingExerciseOverview",
   created() {
     this.$store.dispatch("setDefaultAppbar");
   },
-  vuetify: new Vuetify(),
   data() {
     return {
       picker: new Date().toISOString().substr(0, 10),

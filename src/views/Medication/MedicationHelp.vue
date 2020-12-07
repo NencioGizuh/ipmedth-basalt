@@ -131,7 +131,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 #carousel_card_medicatie .v-btn--outlined .v-btn__content .v-icon, .v-btn--round .v-btn__content .v-icon {
     color: black;
