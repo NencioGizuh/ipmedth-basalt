@@ -40,6 +40,9 @@ export default {
       ChartConfig: {
         labels: [],
       },
+      datachart_colors:[
+        "#2ecc71","#3498db","#e67e22","#e74c3c","#f1c40f",
+      ]
     };
   },
   mounted() {
@@ -73,16 +76,16 @@ export default {
     },
     fillChartData(){
       const datum = new Date();
-      //const maand = datum.getMonth() + 1;
+      const maand = datum.getMonth() + 1;
       const dag = datum.getDate();
       var i = 0;
       for (i = 0; i < 6; i++){
-        this.labels[i] = ((dag + i));
+        this.labels[i] = ((dag + i +"-" +maand ));
       }
       for (let j = 0; j < this.medicijnen_tijden.length; j++){
         this.datasets.push( {
           label: this.medicijnen_tijden[j].title,
-          backgroundColor: '#008ACC',
+          backgroundColor: this.datachart_colors[j],
           data: [this.medicijnen_tijden[j].dosage]
         
         },)
