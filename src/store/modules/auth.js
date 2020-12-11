@@ -103,6 +103,11 @@ const getters = {
         // return state.token !== null;
         return true; // Can be used for development
     },
+    isNotAuthenticated(state) {
+        console.log(state.token == null);
+        // return state.token !== null;
+        return false; // Can be used for development
+    }
 };
 
 export default {state, mutations, actions, getters};

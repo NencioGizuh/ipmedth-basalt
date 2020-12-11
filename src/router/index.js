@@ -53,36 +53,36 @@ const routes = [
     { path: "/account/changepersonalinformation", component: ChangePersonalInformation },
     { path: "/account/managenotifications", component: ManageNotifications },
     { path: "/account/managetriggers", component: ManageTriggers },
+    //Action plan
     { path: "/actionplan", component: ActionPlanOverview },
     { path: "/actionplan/change", component: ChangeActionPlan },
+    //Dashboard
     { path: "/dashboard/:name_of_city/concentration/:name_of_concentration", component: AirConcentration },
     { path: "/dashboard/:name_of_city/airquality", component: AirQuality },
+    //Breathing Exercises
     { path: "/breathingexercise", component: BreathingExerciseOverview },
     { path: "/breathingexercise/list", component: BreathingExercisesList },
-    //Interval
     { path: "/breathingexercise/list/interval", component: IntervalExplanation },
     { path: "/breathingexercise/list/interval/countdown", component: IntervalCountdown },
     { path: "/breathingexercise/list/interval/runtime", component: IntervalRuntime },
-    //CP Meting
     { path: "/breathingexercise/cpmeasurement", component: CpMeasurement },
     { path: "/breathingexercise/cpmeasurement/CP1", component: CP1 },
     { path: "/breathingexercise/cpmeasurement/CP1/CP1start", component: CP1start },
     { path: "/breathingexercise/cpmeasurement/CP2", component: CP2 },
     { path: "/breathingexercise/cpmeasurement/CP2/CP2start", component: CP2start },
     { path: "/breathingexercise/cpstatistics", component: CpStatistics },
-    //Medicatie
+    //Medication
     { path: "/medication/add", component: AddMedication },
     { path: "/medication", component: MedicationOverview },
     { path: "/medication/doing", component: MedicationDoing },
     { path: "/medication/help", component: MedicationHelp },
-    //registratie
-    { path: "/register", component: Register },
-    { path: "/register/astmatrigger", component: RegisterAstmaTrigger, name: "RegisterAstmaTrigger" },
-
+    //Peakflow
     { path: "/peakflow/add", component: AddPeakFlow },
     { path: "/peakflow/:peak_flow_id", component: PeakFlowMeasurement },
     { path: "/peakflow", component: PeakFlowOverview },
     { path: "/peakflow/:peak_flow_id/share", component: SharePeakFlow },
+    //User Authentication
+    { path: "/register", component: Register },
     { path: "/saveinformation", component: SaveInformation },
     { path: "/userinformation", component: UserInformation },
     { path: "/dashboard", component: Dashboard },

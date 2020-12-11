@@ -32,7 +32,11 @@
         name: "BottomNavigation",
         computed: {
             isAuth() {
-                return this.$store.getters.isAuthenticated;
+                if (this.$route.path == "/login"){
+                    return this.$store.getters.isNotAuthenticated;
+                } else {
+                    return this.$store.getters.isAuthenticated;
+                }
             },
             showDefaultAppbar() {
                 return this.$store.getters.getDefaultAppbar;
