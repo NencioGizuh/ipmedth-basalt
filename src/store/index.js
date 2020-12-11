@@ -7,6 +7,7 @@ import peakflow from "./modules/peakflow";
 
 import medicijnen from "./modules/medicijnen.js"
 import airquality from "./modules/airquality";
+import registraties from "./modules/registraties";
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
       auth,
       peakflow,
       medicijnen,
+      registraties,
       airquality
   }
 })
