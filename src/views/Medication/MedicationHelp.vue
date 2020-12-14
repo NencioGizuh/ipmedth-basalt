@@ -20,7 +20,7 @@
                 <h4 align="center" class="mb-5">Ik neem nog een puf</h4>
                 <v-row align="center" no-gutters style="">
                   <v-col>
-                    <v-card to="/medication" style="background-color:#EF7D00;" class="pa-2 ma-1" align="center" outlined tile> Klaar </v-card>
+                    <v-card to="/medication"  color="accent" class="pa-2 ma-1" align="center" outlined tile> Klaar </v-card>
                   </v-col>
                   <v-col>
                     <v-card to="/medication" class="pa-2 ma-1 primary" :disabled="true" align="center" outlined tile >Logboek</v-card>

@@ -38,6 +38,7 @@ import PeakFlowOverview from "@/views/PeakFlow/PeakFlowOverview.vue";
 import SharePeakFlow from "@/views/PeakFlow/SharePeakFlow.vue";
 
 import Register from "@/views/Register/Register.vue";
+import RegisterAstmaTrigger from "@/views/Register/RegisterAstmaTrigger.vue";
 import SaveInformation from "@/views/Register/SaveInformation.vue";
 import UserInformation from "@/views/Register/UserInformation.vue";
 
@@ -69,15 +70,19 @@ const routes = [
     { path: "/breathingexercise/cpmeasurement/CP2", component: CP2 },
     { path: "/breathingexercise/cpmeasurement/CP2/CP2start", component: CP2start },
     { path: "/breathingexercise/cpstatistics", component: CpStatistics },
+    //Medicatie
     { path: "/medication/add", component: AddMedication },
     { path: "/medication", component: MedicationOverview },
     { path: "/medication/doing", component: MedicationDoing },
     { path: "/medication/help", component: MedicationHelp },
+    //registratie
+    { path: "/register", component: Register },
+    { path: "/register/astmatrigger", component: RegisterAstmaTrigger, name: "RegisterAstmaTrigger" },
+
     { path: "/peakflow/add", component: AddPeakFlow },
     { path: "/peakflow/:peak_flow_id", component: PeakFlowMeasurement },
     { path: "/peakflow", component: PeakFlowOverview },
     { path: "/peakflow/:peak_flow_id/share", component: SharePeakFlow },
-    { path: "/register", component: Register },
     { path: "/saveinformation", component: SaveInformation },
     { path: "/userinformation", component: UserInformation },
     { path: "/dashboard", component: Dashboard },

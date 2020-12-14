@@ -88,7 +88,6 @@ export default {
         this.formValues();
       }
     },
-
     beforeRouteEnter(to, from, next) {
       next((vm) => {
         vm.$store.dispatch("setAppbarDetails", {
