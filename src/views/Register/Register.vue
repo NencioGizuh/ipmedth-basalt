@@ -9,26 +9,34 @@
           <img align="center" src="@/assets/logos_en_blocks/logo-basalt.png" />
         </v-col>  
         <v-alert v-show="registratie_succes" dense text align="center" type="success" >Uw registratie is opgeslagen</v-alert>
-        <v-row class="mt-0">  
+        <v-row class="mt-0">
+            <v-col class="pt-0 pb-0 pr-10 pl-10" cols="12" sm="12" md="12">
+              <h5>Volledige naam</h5>
+              <v-text-field class="mt-0 pt-0" v-model="register.fullname" required :rules="rules.fullnameRules" ></v-text-field>
+            </v-col>  
             <v-col class="pt-0 pb-0 pr-10 pl-10" cols="12" sm="12" md="12">
               <h5>Email</h5>
-              <v-text-field class="mt-0 pt-0" v-model="register.email" label="jdoe@gmail.com" required :rules="[v => !!v || 'Alles invullen aub']" ></v-text-field>
+              <v-text-field class="mt-0 pt-0" v-model="register.email" required :rules="rules.emailRules"></v-text-field>
             </v-col>
             <v-col class="pt-0 pb-0 pr-10 pl-10" cols="12" sm="12" md="12">
               <h5>Patientnummer</h5>
-              <v-text-field class="mt-0 pt-0" v-model="register.patientnummer" label="34546999" required :rules="[v => !!v || 'Alles invullen aub']" ></v-text-field>
+              <v-text-field class="mt-0 pt-0" v-model="register.patientnummer" required :rules="rules.patientnummerRules" ></v-text-field>
             </v-col>
             <v-col class="pt-0 pb-2 pr-10 pl-10" cols="12" sm="12" md="12">
               <h5>Wachtwoord</h5>
-              <v-text-field class="mt-0 pt-0" v-model="register.wachtwoord" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required]" :type="show1 ? 'text' : 'password'" name="input-10-1" hint="minstens 8 tekens" counter @click:append="show1 = !show1" ></v-text-field>
+              <v-text-field class="mt-0 pt-0" v-model="register.wachtwoord" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="rules.wachtwoordRules" :type="show1 ? 'text' : 'password'" name="input-10-1" @click:append="show1 = !show1" ></v-text-field>
+            </v-col>
+            <v-col class="pt-0 pb-2 pr-10 pl-10" cols="12" sm="12" md="12">
+              <h5>Bevestig wachtwoord</h5>
+              <v-text-field class="mt-0 pt-0" v-model="register.bevestigingWachtwoord" :rules="rules.wachtwoordBevestigRules" :type="'password'"></v-text-field>
             </v-col>
             <v-col class="pt-0 pb-0 pr-10 pl-10" cols="6" sm="6" md="6">
               <h5>Leeftijd</h5>
-              <v-text-field class="mt-0 pt-0" v-model="register.leeftijf" label="" required :rules="[v => !!v || 'Alles invullen aub']" ></v-text-field>
+              <v-text-field class="mt-0 pt-0" v-model="register.leeftijd" label="" required :rules="rules.leeftijdRules" ></v-text-field>
             </v-col>
             <v-col class="pt-0 pb-0 pr-10 pl-10" cols="6" sm="6" md="6">
               <h5>Lengte (in cm)</h5>
-              <v-text-field class="mt-0 pt-0" v-model="register.lengte" label="" required :rules="[v => !!v || 'Alles invullen aub']" ></v-text-field>
+              <v-text-field class="mt-0 pt-0" v-model="register.lengte" label="" required :rules="rules.lengteRules" ></v-text-field>
             </v-col>
             <v-btn :disabled="registratie_succes || !valid"  block tile @click="validate" color="accent">
               Registreren
@@ -49,18 +57,49 @@ export default {
       show1: false,
       registratie_succes: false,
       valid: true,
+      max: 255,
       uur: null,
       minuut: null,
       register : {
+        fullname: null,
         email: null,
         patientnummer: null,
         wachtwoord:null,
-        leeftijf: null,
+        bevestigingWachtwoord: null,
+        leeftijd: null,
         lengte: null
       },
       rules: {
-        required: value => !!value || 'Required.',
-        min: value => value.length >= 8 || 'Min 8 characters',
+        fullnameRules: [
+          v => !!v || 'Naam is vereist',
+          v => (v || '').length <= this.max || 'Naam mag maximaal 255 karakters bevatten',
+          v => isNaN(v) || 'Naam mag niet uit cijfers bestaan'
+        ],
+        emailRules: [
+          v => !!v || 'E-mail is vereist',
+          v => /.+@.+\..+/.test(v) || 'E-mail moet valide zijn',
+        ],
+        patientnummerRules: [
+          v => !!v || 'Patientnummer is vereist',
+          v => /\d/.test(v) || 'Patientnummer bestaat uit nummers'
+        ],
+        wachtwoordRules: [
+          v => !!v || 'Wachtwoord is vereist',
+          v => v.length >= 6 || 'Minimaal 6 karakters'
+        ],
+        wachtwoordBevestigRules: [
+          v => !!v || 'Wachtwoord is vereist',
+          v => v.length >= 6 || 'Minimaal 6 karakters',
+          v => (!!v && v) === this.register.wachtwoord || 'Wachtwoord komt niet overeen'
+        ],
+        leeftijdRules: [
+          v => !!v || 'Leeftijd is vereist',
+          v => /\d/.test(v) || 'Leeftijd bestaat uit cijfers'
+        ],
+        lengteRules: [
+          v => !!v || 'Lengte is vereist',
+          v => /\d/.test(v) || 'Lengte bestaat uit cijfers'
+        ],
       },
     };
   },
@@ -69,6 +108,7 @@ export default {
     formValues(){
       this.$store.commit("saveRegistratie", this.register);
       this.registratie_succes = true;
+      this.$store.dispatch("postRegistration");
       setTimeout( // Als de backend klaar is een succesvol action recall laten
         function(){ 
           router.push({ name: 'RegisterAstmaTrigger', params: { userId: 123 } }) // User.token meegeven als registratie succesvol is
