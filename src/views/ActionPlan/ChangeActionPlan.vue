@@ -123,7 +123,14 @@
                 </v-card-text>
             </v-card>
 
-            <v-btn block color="accent" class="mt-4" type="submit">
+            <v-btn 
+                block 
+                color="accent" 
+                class="mt-4" 
+                type="submit" 
+                :loading="loading" 
+                :disabled="loading" 
+            >
                 Opslaan
             </v-btn>
         </v-form>
@@ -154,6 +161,7 @@ export default {
                 'Medicine 3',
                 'Medicine 4',
             ],
+            loading: false,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -165,8 +173,6 @@ export default {
         });
     },
     created() {
-        // TODO: Retrieve data from database and fill values
-        this.$store.dispatch("setActionPlanFromDatabase");
         this.setActionPlanFromVuex();
     },
     methods: {
@@ -177,29 +183,25 @@ export default {
         },
         submitForm (e) {
             e.preventDefault();
+            this.loading = true;
 
             const data = {
-                zoneGreenPeakFlowBeforeMedicines: this.zoneGreenPeakFlowBeforeMedicines,
-                zoneGreenPeakFlowAfterMedicines: this.zoneGreenPeakFlowAfterMedicines,
-                zoneGreenExplanation: this.zoneGreenExplanation,
-                zoneYellowPeakFlowBelow: this.zoneYellowPeakFlowBelow,
-                zoneYellowPeakFlowAbove: this.zoneYellowPeakFlowAbove,
-                zoneYellowMedicines: this.zoneYellowMedicines,
-                zoneYellowExplanation: this.zoneYellowExplanation,
-                phoneNumberGP: this.phoneNumberGP,
-                phoneNumberLungSpecialist: this.phoneNumberLungSpecialist,
-                zoneOrangeExplanation: this.zoneOrangeExplanation,
-                zoneRedPeakFlow: this.zoneRedPeakFlow,
-                zoneRedMedicines: this.zoneRedMedicines,
-                zoneRedExplanation: this.zoneRedExplanation,
+                zone_green_peakflow_before_medicines: this.zoneGreenPeakFlowBeforeMedicines,
+                zone_green_peakflow_after_medicines: this.zoneGreenPeakFlowAfterMedicines,
+                zone_green_explanation: this.zoneGreenExplanation,
+                zone_yellow_peakflow_below: this.zoneYellowPeakFlowBelow,
+                zone_yellow_peakflow_above: this.zoneYellowPeakFlowAbove,
+                zone_yellow_medicines: this.zoneYellowMedicines ? this.zoneYellowMedicines.join() : null,
+                zone_yellow_explanation: this.zoneYellowExplanation,
+                phonenumber_gp: this.phoneNumberGP,
+                phonenumber_lung_specialist: this.phoneNumberLungSpecialist,
+                zone_orange_explanation: this.zoneOrangeExplanation,
+                zone_red_peakflow: this.zoneRedPeakFlow,
+                zone_red_medicines: this.zoneRedMedicines ? this.zoneRedMedicines.join() : null,
+                zone_red_explanation: this.zoneRedExplanation,
             };
 
-            console.log(data);
-
-            // TODO: Send data to API
-            this.$store.dispatch("setActionPlan", data);
-
-            this.$router.push("/actionplan");
+            this.$store.dispatch("postActionPlan", data);
         }
     },
     computed: {

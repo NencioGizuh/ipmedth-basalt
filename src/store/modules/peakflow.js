@@ -1,3 +1,6 @@
+import axios from "axios";
+import router from "@/router/index";
+
 const state = {
     peakflow: [],
     peakflowById: {},
@@ -14,6 +17,7 @@ const state = {
     zoneRedPeakFlow: 200,
     zoneRedMedicines: null,
     zoneRedExplanation: null,
+    loadActionPlan: false,
 };
 
 const mutations = {
@@ -29,9 +33,22 @@ const mutations = {
         state.peakflowById = data;
     },
     setActionPlan(state, data) {
-        for (const prop in data) {
-            state[prop] = data[prop];
-        }
+        state.zoneGreenPeakFlowBeforeMedicines = data.zone_green_peakflow_before_medicines;
+        state.zoneGreenPeakFlowAfterMedicines = data.zone_green_peakflow_after_medicines;
+        state.zoneGreenExplanation = data.zone_green_explanation;
+        state.zoneYellowPeakFlowBelow = data.zone_yellow_peakflow_below;
+        state.zoneYellowPeakFlowAbove = data.zone_yellow_peakflow_above;
+        state.zoneYellowMedicines = data.zone_yellow_medicines ? data.zone_yellow_medicines.split(',') : null;
+        state.zoneYellowExplanation = data.zone_yellow_explanation;
+        state.phoneNumberGP = data.phonenumber_gp;
+        state.phoneNumberLungSpecialist = data.phonenumber_lung_specialist;
+        state.zoneOrangeExplanation = data.zone_orange_explanation;
+        state.zoneRedPeakFlow = data.zone_red_peakflow;
+        state.zoneRedMedicines = data.zone_red_medicines ? data.zone_red_medicines.split(',') : null;
+        state.zoneRedExplanation = data.zone_red_explanation;
+    },
+    setLoadingActionPlan(state, data) {
+        state.loadActionPlan = data;
     }
 };
 
@@ -139,11 +156,41 @@ const actions = {
         const peakflowById = state.peakflow.find(pk => pk.id === Number(id));
         commit("setPeakFlowById", peakflowById);
     },
-    setActionPlanFromDatabase() {
-        // TODO: Retrieve from database
+    setActionPlanFromDatabase({commit}) {
+        commit("setLoadingActionPlan", true);
+        axios.get('http://localhost:8000/api/getactionplanuser', {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            commit("setActionPlan", res.data);
+            commit("setLoadingActionPlan", false);
+        }).catch(() => {
+            axios.post('http://localhost:8000/api/createactionplan', {
+                zone_green_peakflow_before_medicines: 600,
+                zone_green_peakflow_after_medicines: 700,
+                zone_yellow_peakflow_below: 599,
+                zone_yellow_peakflow_above: 400,
+                zone_red_peakflow: 200
+            }, {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                } 
+            }).then(res => {
+                commit("setActionPlan", res.data);
+                commit("setLoadingActionPlan", false);
+            })
+        })
     },
-    setActionPlan({ commit }, data) {
-        commit("setActionPlan", data);
+    postActionPlan({ commit }, data) {
+        axios.post('http://localhost:8000/api/createactionplan', data, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            commit("setActionPlan", res.data);
+            router.push("/actionplan");
+        })
     },
 };
 
@@ -181,6 +228,9 @@ const getters = {
     getPhoneNumberLungSpecialist() {
         return state.phoneNumberLungSpecialist;
     },
+    loadingActionPlan() {
+        return state.loadActionPlan;
+    }
 };
 
 export default {state, mutations, actions, getters};
