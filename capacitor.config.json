@@ -5,7 +5,7 @@
   "npmClient": "npm",
   "webDir": "dist",
   "server": {
-    "url": "http://192.168.178.33:8080",
+    "url": "http://192.168.10.11:8080",
     "cleartext": true
   },
   "plugins": {

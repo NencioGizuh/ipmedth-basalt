@@ -344,7 +344,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("setDefaultAppbar");
     this.$store.state.currentDate = moment().format("MMM DD HH:mm");
     this.initalizeComponent();
   },

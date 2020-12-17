@@ -7,23 +7,44 @@
         <v-img class="logo"
         src="@/assets/logos_en_blocks/logo-basalt.png"
         width="234px"></v-img>
-        
+        <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
               label="E-mail"
-              placeholder="e-mail"
+              placeholder="E-mail"
+              required 
+              :rules="rules.emailRules"
               v-model="login.email"
         ></v-text-field>
         <v-text-field
               label="Password"
-              placeholder="password"
+              placeholder="Wachtwoord"
               type="password"
+              required 
+              :rules="rules.wachtwoordRules"
               v-model="login.password"
         ></v-text-field>
-        <v-btn block color="accent" @click="login" class="login">
+        <v-btn :disabled="login_success || !valid" @click="validate" block color="accent" class="login">
             Inloggen
         </v-btn>
+        <v-dialog v-model="dialog" width="500">
+            <v-card>
+              <v-card-title class="headline mb-2 red lighten-2">
+                {{ loginErrors.loginErrorTitle }}
+              </v-card-title>
+              <v-card-text>
+                {{ loginErrors.loginErrorBody }}
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="dialog = false">
+                  {{ loginErrors.loginErrorButton }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-form>
         <p class="registry__button">
-            Nog geen account? klik <a to="/dashboard">hier</a> om je te registreren
+            Nog geen account? klik <a @click="register">hier</a> om je te registreren
         </p>
     </div>
 </div>
@@ -34,15 +55,64 @@ export default {
     name: "Login",
     data() {
         return {
-            
+            loginErrors: {
+            },
+            dialog: false,
+            login_success: false,
+            valid: true,
+            login: {
+                email: null,
+                password: null
+            },
+            rules: {
+                emailRules: [
+                    v => !!v || 'E-mail is vereist',
+                    v => /.+@.+\..+/.test(v) || 'E-mail moet valide zijn',
+                ],
+                wachtwoordRules: [
+                    v => !!v || 'Wachtwoord is vereist',
+                    v => v.length >= 6 || 'Minimaal 6 karakters'
+                ],
+            }
         }
     },
     methods: {
-        login() {
+        register() {
+            this.$router.push('/register');
+        },
+        loginUser() {
+            var vm = this;
+            this.$store.commit("saveInloggen", this.login);
+            this.$store.dispatch("postLogin")
+            .then(function () {
+                vm.dialog = false;
+                vm.login_success = true;
+                vm.$router.push("/dashboard");
+            })
+            .catch(function () {
+            vm.loginErrors = vm.$store.state.registraties.inloggenErrors;
+            switch (vm.loginErrors.loginErrorStatus) {
+                case 400:
+                 vm.dialog = true;
+                 break;
+          }
+            });
+            /*setTimeout( // Als de backend klaar is een succesvol action recall laten
+            function(){ 
+                vm.$router.push('/dashboard');
+            }, 3000); */
+        },
+        validate(){
+        this.$refs.form.validate();
+        if (this.$refs.form.validate()){
+            this.loginUser();
+        }
+        },
+        /*login() {
             // TODO: Change function
             this.$store.dispatch("setToken", "token123");
             this.$router.push('/dashboard');
-        }
+        } */
     }
 }
 </script>
