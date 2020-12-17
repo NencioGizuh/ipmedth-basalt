@@ -15,6 +15,9 @@ export default {
   components: {
     'airquality-overview': AirqualityOverview
   },
+  created() {
+    this.$store.dispatch("setDefaultAppbar");
+  }
 };
 </script>
 

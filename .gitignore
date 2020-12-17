@@ -3,6 +3,7 @@ node_modules
 /dist
 .gradle
 android
+capacitor.config.json
 
 
 # local env files

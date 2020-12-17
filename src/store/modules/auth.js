@@ -100,8 +100,8 @@ const getters = {
     },
     isAuthenticated(state) {
         console.log(state.token !== null);
-        // return state.token !== null;
-        return true; // Can be used for development
+        return state.token !== null;
+        //return true; // Can be used for development
     },
 };
 
