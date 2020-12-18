@@ -48,6 +48,7 @@
 
 <script>
 import PeakFlowChart from "@/components/PeakFlow/PeakFlowChart.vue";
+import moment from "moment";
 
 export default {
     name: "PeakFlowCardChart",
@@ -67,8 +68,16 @@ export default {
                         },
                     }],
                     xAxes: [{
+                        type: "time",
+                        time: {
+                            unit: "days",
+                            displayFormats: {
+                                days: 'DD-MM'
+                            },
+                            tooltipFormat: 'DD-MM-YYYY HH:mm'
+                        },
                         ticks: {
-                            display: false,
+                            display: true,
                         },
                         gridLines: {
                             display: false,
@@ -101,16 +110,21 @@ export default {
         getChartData(){
             let peakflowMeasurements = this.$store.getters.getPeakFlow;
 
-            // TODO: Not slice, but change based on date
             switch(this.selectTimeRangeChart) {
                 case "week":
-                    peakflowMeasurements = peakflowMeasurements.slice(0, 4).reverse();
+                    peakflowMeasurements = peakflowMeasurements.filter(el => {
+                        return el.date >= moment().subtract(7, 'days').format();
+                    }).reverse();
                     break;
                 case "twoweeks":
-                    peakflowMeasurements = peakflowMeasurements.slice(0, 8).reverse();
+                    peakflowMeasurements = peakflowMeasurements.filter(el => {
+                        return el.date >= moment().subtract(14, 'days').format();
+                    }).reverse();
                     break;
                 case "month":
-                    peakflowMeasurements = peakflowMeasurements.slice(0, 16).reverse();
+                    peakflowMeasurements = peakflowMeasurements.filter(el => {
+                        return el.date >= moment().subtract(1, 'month').format();
+                    }).reverse();
                     break;
                 default:
                     peakflowMeasurements = peakflowMeasurements.reverse();
@@ -123,9 +137,9 @@ export default {
             for(let i=0; i<peakflowMeasurements.length; i++) {
                 labels.push(peakflowMeasurements[i].date + ", " + peakflowMeasurements[i].time);
                 measurements.push(this.getHighestPeakFlowMeasurement(
-                    peakflowMeasurements[i].measurementOne, 
-                    peakflowMeasurements[i].measurementTwo, 
-                    peakflowMeasurements[i].measurementThree
+                    peakflowMeasurements[i].measurement_one, 
+                    peakflowMeasurements[i].measurement_two, 
+                    peakflowMeasurements[i].measurement_three
                 ));
 
                 if (measurements[i] > this.$store.getters.getPeakFlowZoneGreen) {

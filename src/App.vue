@@ -33,6 +33,7 @@
                 }
 
                 this.$store.dispatch('setActionPlanFromDatabase');
+                this.$store.dispatch('setPeakFlow');
             }
         }
     };

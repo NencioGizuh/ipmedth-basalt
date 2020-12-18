@@ -259,7 +259,6 @@ export default {
     },
     created() {
         this.$store.dispatch('setDefaultAppbar');
-        this.$store.dispatch('setPeakFlow'); // TODO: move to App.vue
     },
     computed: {
         getPeakFlowZoneGreen() {

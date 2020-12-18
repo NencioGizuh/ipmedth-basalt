@@ -4,6 +4,7 @@ import router from "@/router/index";
 const state = {
     peakflow: [],
     peakflowById: {},
+    loadPeakFlow: false,
     zoneGreenPeakFlowBeforeMedicines: 600,
     zoneGreenPeakFlowAfterMedicines: null,
     zoneGreenExplanation: null,
@@ -24,13 +25,27 @@ const mutations = {
     setPeakFlow(state, data) {
         state.peakflow = data;
     },
-    setPeakFlowZones(state, data) {
-        state.zoneGreenPeakFlowBeforeMedicines = data.zoneGreenPeakFlowBeforeMedicines;
-        state.zoneYellowPeakFlowAbove = data.zoneYellowPeakFlowAbove;
-        state.zoneRedPeakFlow = data.zoneRedPeakFlow;
+    addPeakFlow(state, data) {
+        state.peakflow.push(data);
+    },
+    deletePeakFlow(state, id) {
+        const index = state.peakflow.map((e) => e.id).indexOf(Number(id));
+        state.peakflow.splice(index, 1);
+    },
+    orderPeakFlow(state) {
+        state.peakflow.sort((a,b) => {
+            return (a.time < b.time) ? 1 : ((a.time > b.time) ? -1 : 0);
+        });
+
+        state.peakflow.sort((a,b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
     },
     setPeakFlowById(state, data) {
         state.peakflowById = data;
+    },
+    setLoadingPeakFlow(state, data) {
+        state.loadPeakFlow = data;
     },
     setActionPlan(state, data) {
         state.zoneGreenPeakFlowBeforeMedicines = data.zone_green_peakflow_before_medicines;
@@ -54,103 +69,38 @@ const mutations = {
 
 const actions = {
     setPeakFlow({commit}) {
-        // dispatch("setPeakFlowZones");
-        
-        // TODO: Retrieve from database
-        const peakflow = [
-            {
-                id: 1,
-                date: "23-11-2020",
-                time: "11:00",
-                measurementOne: "632",
-                measurementTwo: "620",
-                measurementThree: "600",
-                takenMedicines: false,
-                explanation: "Ik voel me prima"
-            },
-            {
-                id: 2,
-                date: "22-11-2020",
-                time: "20:00",
-                measurementOne: "432",
-                measurementTwo: "420",
-                measurementThree: "400",
-                takenMedicines: true,
-                explanation: "Het gaat beter"
-            },
-            {
-                id: 3,
-                date: "22-11-2020",
-                time: "8:32",
-                measurementOne: "190",
-                measurementTwo: "180",
-                measurementThree: "185",
-                takenMedicines: false,
-                explanation: "Ik heb het heel benauwd"
-            },
-            {
-                id: 4,
-                date: "21-11-2020",
-                time: "21:10",
-                measurementOne: "390",
-                measurementTwo: "380",
-                measurementThree: "388",
-                takenMedicines: true,
-                explanation: "Ik heb het benauwd"
-            },
-            {
-                id: 5,
-                date: "21-11-2020",
-                time: "11:00",
-                measurementOne: "632",
-                measurementTwo: "645",
-                measurementThree: "628",
-                takenMedicines: false,
-                explanation: "Ik voel me prima"
-            },
-            {
-                id: 6,
-                date: "20-11-2020",
-                time: "20:00",
-                measurementOne: "432",
-                measurementTwo: "462",
-                measurementThree: "400",
-                takenMedicines: true,
-                explanation: "Het gaat beter"
-            },
-            {
-                id: 7,
-                date: "20-11-2020",
-                time: "8:32",
-                measurementOne: "177",
-                measurementTwo: "170",
-                measurementThree: "173",
-                takenMedicines: false,
-                explanation: "Ik heb het heel benauwd"
-            },
-            {
-                id: 8,
-                date: "19-11-2020",
-                time: "21:10",
-                measurementOne: "390",
-                measurementTwo: "350",
-                measurementThree: "375",
-                takenMedicines: true,
-                explanation: "Ik heb het benauwd"
-            },
-        ];
-
-        commit('setPeakFlow', peakflow);
+        commit("setLoadingPeakFlow", true);
+        axios.get('http://localhost:8000/api/getpeakflowuser', {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            commit('setPeakFlow', res.data);
+            commit("setLoadingPeakFlow", false);
+            commit('orderPeakFlow');
+        });
     },
-    setPeakFlowZones({commit}) {
-        // TODO: Retrieve from database
-        const zones = {
-            zoneGreenPeakFlowBeforeMedicines: 600,
-            zoneYellowPeakFlowAbove: 400,
-            zoneRedPeakFlow: 200,
-        };
-
-        commit('setPeakFlowZones', zones);
+    addPeakFlow({commit}, data) {
+        axios.post('http://localhost:8000/api/createpeakflow', data, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            commit("addPeakFlow", res.data);
+            commit('orderPeakFlow');
+            router.push("/peakflow");
+        })
+    },
+    deletePeakFlow({commit}, id) {
+        axios.delete(`http://localhost:8000/api/deletepeakflow/${id}`, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(() => {
+            commit("deletePeakFlow", id);
+            commit('orderPeakFlow');
+            router.push("/peakflow");
+        })
     },
     setPeakFlowById({ commit, state }, id) {
         const peakflowById = state.peakflow.find(pk => pk.id === Number(id));
@@ -209,6 +159,9 @@ const getters = {
     },
     getPeakFlowZoneRed(state) {
         return state.zoneRedPeakFlow;
+    },
+    loadingPeakFlow() {
+        return state.loadPeakFlow;
     },
     getActionPlan(state) {
         const filteredState = Object.keys(state)

@@ -34,6 +34,7 @@
                                     v-bind="attrs"
                                     v-on="on"
                                     outlined
+                                    dense
                                     hide-details="auto"
                                 />
                             </template>
@@ -78,6 +79,7 @@
                                     v-bind="attrs"
                                     v-on="on"
                                     outlined
+                                    dense
                                     hide-details="auto"
                                 />
                             </template>
@@ -113,6 +115,7 @@
                         v-model="measurementOne"
                         label="Meting 1"
                         outlined
+                        dense
                         :rules="required"
                         type="number"
                     />
@@ -120,6 +123,7 @@
                         v-model="measurementTwo"
                         label="Meting 2"
                         outlined
+                        dense
                         :rules="required"
                         type="number"
                     />
@@ -127,8 +131,10 @@
                         v-model="measurementThree"
                         label="Meting 3"
                         outlined
+                        dense
                         :rules="required"
                         type="number"
+                        hide-details="auto"
                     />
                 </v-card-text>
             </v-card>
@@ -155,6 +161,7 @@
                     <p><small>Bijvoorbeeld een verklaring voor een lage peak flow (trigger?).</small></p>
                     <v-textarea
                         outlined
+                        dense
                         name="explanation"
                         v-model="explanation"
                         hide-details="auto"
@@ -162,7 +169,14 @@
                 </v-card-text>
             </v-card>
 
-            <v-btn block color="accent" class="mt-4" type="submit">
+            <v-btn 
+                block 
+                color="accent" 
+                class="mt-4" 
+                type="submit"
+                :loading="loading" 
+                :disabled="loading" 
+            >
                 Opslaan
             </v-btn>
         </v-form>
@@ -189,6 +203,7 @@ export default {
             required: [
                 value => !!value || 'Verplicht in te vullen.',
             ],
+            loading: false,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -205,21 +220,19 @@ export default {
 
             if (!this.$refs.form.validate()) return;
 
+            this.loading = true;
+
             const data = {
                 date: this.date,
                 time: this.time,
-                measurementOne: this.measurementOne,
-                measurementTwo: this.measurementTwo,
-                measurementThree: this.measurementThree,
-                takenMedicines: this.takenMedicines === "yes" ? true : false,
+                measurement_one: this.measurementOne,
+                measurement_two: this.measurementTwo,
+                measurement_three: this.measurementThree,
+                taken_medicines: this.takenMedicines === "yes" ? true : false,
                 explanation: this.explanation,
             };
 
-            console.log(data);
-
-            // TODO: Send data to API
-
-            this.$router.push("/peakflow");
+            this.$store.dispatch("addPeakFlow", data);
         },
     }
 }
