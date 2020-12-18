@@ -18,15 +18,15 @@
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-container class="pt-0 lighten-5 mb-6">
           <v-row class="mt-5">
-            <v-textarea outlined color="teal">
+            <v-textarea v-model="form.opmerking" outlined color="teal">
               <template v-slot:label>
                 <div>Opmerking <small>(optioneel)</small></div>
               </template>
             </v-textarea>
 
             <div class="mb-4"  >
-              <h4>De zorgverleners die u heeft geselecteerd om informatie mee te delen zijn:</h4>
-              <h5 v-for="per in msg" :key="per.name">{{ per.name }}</h5>
+              <h4 v-show="msg[0].name">De zorgverleners die u heeft geselecteerd om informatie mee te delen zijn:</h4>
+              <h5 v-for="per in msg" :key="per.name" >{{ per.name }}</h5>
             </div>
 
             <v-btn block color="accent" @click="validate">
@@ -52,6 +52,12 @@ export default {
       locatieFilterValue: null,
       zorgverlenerSelected: "",
       search: "",
+      form : {
+        id: null,
+        title: null,
+        opmerking: null,
+        tijd: null
+      },
       locatieList: [
           {text: "Alle", value: null},
           {text: "Den Haag", value: "Den Haag"},
@@ -115,9 +121,9 @@ export default {
   },
   methods: {
     validate() {
-      //if (this.$refs.form.validate()){
-      alert("valid");
-      // }
+      if (this.$refs.form.validate()){
+        alert("valid");
+       }
     },
     locatiesFilter(value) {
       if (!this.locatieFilterValue) {
@@ -131,7 +137,6 @@ export default {
       var selectedRow = [];
       for (let ind = 0; ind < this.selected.length; ind++) {
         selectedRow[ind] = this.selected[ind];
-        console.log(selectedRow);
       }
       return selectedRow[0] ? selectedRow : "geen data";
     }
