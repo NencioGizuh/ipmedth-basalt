@@ -12,6 +12,8 @@
       </div>
     </v-card>
 
+    <v-alert v-show="alertZorverlener" dense text align="center" type="error" >Selecteer altublieft een zorgverlener.</v-alert>
+
     <v-card class="mt-4 px-3 py-4">
       <h4>Eventuele opmerkingen/verklaringen</h4>
       <h5>Bijvoorbeeld een verklaring voor een lage peak flow</h5>
@@ -49,13 +51,15 @@ export default {
       selected: [],
       selectedRows: [],
       valid: true,
+      alertZorverlener: false,
       locatieFilterValue: null,
       zorgverlenerSelected: "",
       search: "",
       form : {
-        id: null,
-        title: null,
+        peak_id: null,
+        zorgverleneres_id: [],
         opmerking: null,
+        user_id: null,
         tijd: null
       },
       locatieList: [
@@ -121,9 +125,31 @@ export default {
   },
   methods: {
     validate() {
-      if (this.$refs.form.validate()){
-        alert("valid");
-       }
+      if(this.selectedRows.length != 0){
+        this.alertZorverlener = false;
+        this.packData();
+      } else {
+        this.alertZorverlener = true;
+      }
+    },
+    packData(){
+      this.form.peak_id = this.$route.params.peak_flow_id;
+      for (let a = 0; a < this.selected.length; a++){
+        this.form.zorgverleneres_id[a] = this.selected[a].id;
+      }
+      this.form.opmerking;
+      this.user_id;
+      this.tijd;
+      console.log(this.form);
+      this.sendData();
+    },
+
+    sendData(){
+
+
+    },
+    slctName(selectedRow){
+      this.selectedRows = selectedRow;
     },
     locatiesFilter(value) {
       if (!this.locatieFilterValue) {
@@ -135,8 +161,14 @@ export default {
   computed: {
     msg() {
       var selectedRow = [];
+      if (this.selected.length == 0){
+        this.slctName(selectedRow);
+      }
       for (let ind = 0; ind < this.selected.length; ind++) {
         selectedRow[ind] = this.selected[ind];
+        if(ind == (this.selected.length -1)){
+          this.slctName(selectedRow);
+        }
       }
       return selectedRow[0] ? selectedRow : "geen data";
     }
@@ -145,7 +177,7 @@ export default {
     next((vm) => {
       vm.$store.dispatch("setAppbarDetails", {
         appbarText: "Peak flow meting delen",
-        appbarCloseRoute: from.path,
+        appbarCloseRoute: "/peakflow",
       });
     });
   },
