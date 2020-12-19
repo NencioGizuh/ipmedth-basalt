@@ -35,7 +35,7 @@
               <v-icon left>mdi-share</v-icon>
               Delen
             </v-btn>
-
+            {{ peakflow_shares }}
           </v-row>
         </v-container>
       </v-form>
@@ -131,6 +131,7 @@ export default {
       } else {
         this.alertZorverlener = true;
       }
+      
     },
     packData(){
       this.form.peak_id = this.$route.params.peak_flow_id;
@@ -140,12 +141,11 @@ export default {
       this.form.opmerking;
       this.user_id;
       this.tijd;
-      console.log(this.form);
       this.sendData();
     },
 
     sendData(){
-
+      this.$store.dispatch("saveSharePeakflow", this.form);
 
     },
     slctName(selectedRow){
@@ -171,6 +171,9 @@ export default {
         }
       }
       return selectedRow[0] ? selectedRow : "geen data";
+    },
+    peakflow_shares(){
+      return this.$store.getters.peakflow_shares;
     }
   },
   beforeRouteEnter(to, from, next) {
