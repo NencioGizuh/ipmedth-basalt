@@ -78,6 +78,8 @@ export default {
                         },
                         ticks: {
                             display: true,
+                            min: moment().subtract(7, 'days').format(),
+                            max: moment().format()
                         },
                         gridLines: {
                             display: false,
@@ -115,16 +117,19 @@ export default {
                     peakflowMeasurements = peakflowMeasurements.filter(el => {
                         return el.date >= moment().subtract(7, 'days').format();
                     }).reverse();
+                    this.chartOptions.scales.xAxes[0].ticks.min = moment().subtract(7, 'days').format();
                     break;
                 case "twoweeks":
                     peakflowMeasurements = peakflowMeasurements.filter(el => {
                         return el.date >= moment().subtract(14, 'days').format();
                     }).reverse();
+                    this.chartOptions.scales.xAxes[0].ticks.min = moment().subtract(14, 'days').format();
                     break;
                 case "month":
                     peakflowMeasurements = peakflowMeasurements.filter(el => {
                         return el.date >= moment().subtract(1, 'month').format();
                     }).reverse();
+                    this.chartOptions.scales.xAxes[0].ticks.min = moment().subtract(1, 'month').format();
                     break;
                 default:
                     peakflowMeasurements = peakflowMeasurements.reverse();
@@ -135,7 +140,7 @@ export default {
             let backgroundColor = [];
 
             for(let i=0; i<peakflowMeasurements.length; i++) {
-                labels.push(peakflowMeasurements[i].date + ", " + peakflowMeasurements[i].time);
+                labels.push(new Date(peakflowMeasurements[i].date + " " + peakflowMeasurements[i].time));
                 measurements.push(this.getHighestPeakFlowMeasurement(
                     peakflowMeasurements[i].measurement_one, 
                     peakflowMeasurements[i].measurement_two, 

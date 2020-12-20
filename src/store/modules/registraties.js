@@ -74,7 +74,7 @@ const actions = {
         })
         })
     },
-    postLogin({ commit }) {
+    postLogin({ commit, dispatch }) {
         return new Promise((resolve, reject) => {
         axios.post('http://localhost:8000/api/login', {
             username: state.inloggen.email,
@@ -87,6 +87,8 @@ const actions = {
             resolve(response)
             commit("setToken", response.data.access_token);
             localStorage.setItem("token", response.data.access_token);
+            dispatch('setActionPlanFromDatabase');
+            dispatch('setPeakFlow');
         }).catch(function (error) {
             reject(error);
             console.log(error.response);
