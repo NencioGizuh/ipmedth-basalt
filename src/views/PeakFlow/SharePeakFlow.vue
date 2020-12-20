@@ -35,7 +35,6 @@
               <v-icon left>mdi-share</v-icon>
               Delen
             </v-btn>
-            {{ peakflow_shares }}
           </v-row>
         </v-container>
       </v-form>
