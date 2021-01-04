@@ -32,6 +32,12 @@ export default {
       const dateTime = date + " " + time;
       this.timestamp = dateTime;
     },
+    clearCache() {
+      if (this.uren >= 0 && this.uren <= 6) {
+        localStorage.removeItem("CPMeting1");
+        localStorage.removeItem("CPMeting2");
+      }
+    }
   },
   data() {
     return {
@@ -40,10 +46,6 @@ export default {
           name: "first CP",
           color: "red",
           data: {
-            "30-11-2020": 3,
-            "01-11-2020": 4,
-            "02-12-2020": 4,
-            "03-12-2020": 5,
             currentDate: localStorage.getItem("CPMeting1"),
           },
         },
@@ -51,10 +53,6 @@ export default {
           name: "second CP",
           color: "green",
           data: {
-            "30-11-2020": 6,
-            "01-11-2020": 8,
-            "02-12-2020": 9,
-            "03-12-2020": 7,
             currentDate: localStorage.getItem("CPMeting2"),
           },
         },

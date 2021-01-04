@@ -22,7 +22,8 @@ export default {
       timeInSeconds: 0,
       timer: undefined,
       timerState: 0,
-      completedID3: false
+      completedID3: false, 
+      takenCounter: ""
     };
   },
   watch: {
@@ -61,10 +62,19 @@ export default {
     },
     verzend() {
       if (this.timerState == 2) {
-        console.log("Meting met waarde: " + this.timeInSeconds)
-        localStorage.setItem('CPMeting2', this.timeInSeconds)
+        console.log("Meting met waarde: " + this.timeInSeconds);
+        localStorage.setItem('CPMeting2', this.timeInSeconds);
         this.completedID3 = true;
-        localStorage.setItem('completedID3', this.completedID3)
+
+         this.takenCounter = localStorage.getItem('takenCounter');
+          if (this.takenCounter === null) {
+            this.takenCounter = 0;
+          } else {
+            this.takenCounter++;
+          }
+        
+        localStorage.setItem('completedID3', this.completedID3);
+        localStorage.setItem('takenCounter', this.takenCounter);
         this.$router.push({ path: "/breathingexercise/cpstatistics" });
       }
     },

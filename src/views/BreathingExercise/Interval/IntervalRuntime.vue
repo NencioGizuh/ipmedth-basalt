@@ -15,10 +15,11 @@ export default {
   name: "IntervalRuntime",
   data() {
     return {
-      timerCount: 30,
+      timerCount: 15,
       timeout: null,
       test1: "", 
-      completedID2: false
+      completedID2: false,
+      takenCounter: ""
     };
   },
   watch: {
@@ -38,10 +39,17 @@ export default {
     this.timeout = setTimeout(
       function () {
         this.completedID2 = true;
+        this.takenCounter = localStorage.getItem('takenCounter');
+          if (this.takenCounter === null) {
+            this.takenCounter = 0;
+          } else {
+            this.takenCounter++;
+          }
         localStorage.setItem('completedID2', this.completedID2)
+        localStorage.setItem('takenCounter', this.takenCounter)
         this.$router.push({ path: "/breathingexercise" });
       }.bind(this),
-      30000
+      15000
     );
   },
   beforeRouteEnter(to, from, next) {
@@ -77,6 +85,8 @@ export default {
   padding: 12px;
   margin: 50px auto;
   border: 1px solid #3cc8b4;
+  opacity: 50%;
+  filter: blur(2px);
   -webkit-animation: breathing 15s ease-in-out infinite normal;
   animation: breathing 15s ease-in-out infinite normal;
   font-family: "Lantinghei SC";
@@ -95,7 +105,7 @@ export default {
   transform: translate(-50%, -50%);
 }
 
-@-webkit-keyframes breathing {
+@keyframes breathing {
   0% {
     -webkit-transform: scale(0.7);
     transform: scale(0.7);
@@ -119,9 +129,9 @@ export default {
 
 .timerCount {
   position: absolute;
-  top: 65%;
+  top: 75%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 34px;
+  font-size: 40px;
 }
 </style>
