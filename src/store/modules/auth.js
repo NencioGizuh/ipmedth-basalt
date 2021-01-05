@@ -1,12 +1,14 @@
+import axios from "axios";
+import router from "@/router/index";
+
 const state = {
     token: null,
     user: {
         name: null,
         email: null,
         patientNumber: null,
-        dateOfBirth: null,
-        length: null,
-        gender: null,
+        age: null,
+        height: null,
     },
     notifications: {
         medicines: false,
@@ -27,6 +29,8 @@ const state = {
         hyperventilation: false,
         pollen: false,
     },
+    loadingUser: false,
+    loadingTriggers: false,
 };
 
 const mutations = {
@@ -41,26 +45,85 @@ const mutations = {
     },
     setTriggers(state, data) {
         state.triggers = data;
-    }
+    },
+    setLoadingUser(state, data) {
+        state.loadingUser = data;
+    },
+    setLoadingTriggers(state, data) {
+        state.loadingTriggers = data;
+    },
 };
 
 const actions = {
-    // TODO: Change function
     setToken({commit}, data) {
         commit("setToken", data);
     },
     setUser({commit}) {
-        // TODO: Get user information from database
+        commit("setLoadingUser", true);
+        commit("setLoadingTriggers", true);
 
-        const user = {
-            name: "John Doe",
-            email: "jdoe@gmail.com",
-            patientNumber: "123456",
-            dateOfBirth: "1970-01-01",
-            length: "179",
-            gender: "man"
-        }
+        axios.get('http://localhost:8000/api/user', {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            commit("setUser", {
+                name: res.data.name,
+                email: res.data.email,
+                patientNumber: res.data.patient_number,
+                age: res.data.age,
+                height: res.data.height,
+            });
+            commit("setLoadingUser", false);
+        });
 
+        axios.get('http://localhost:8000/api/gettriggersuser', {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            console.log(res.data);
+            commit("setTriggers", {
+                tabaccoSmoke: res.data.tabacco_smoke,
+                dustMites: res.data.dust_mites,
+                airPollution: res.data.air_pollution,
+                pets: res.data.pets,
+                fungi: res.data.fungi,
+                fireSmoke: res.data.fire_smoke,
+                infections: res.data.infections,
+                effort: res.data.effort,
+                weatherConditions: res.data.weather_conditions,
+                hyperventilation: res.data.hyperventilation,
+                pollen: res.data.pollen, 
+            });
+            commit("setLoadingTriggers", false);
+        }).catch(err => {
+            if (err.response.status === 404) {
+                axios.post('http://localhost:8000/api/createtriggers', {}, {
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    } 
+                }).then(res => {
+                    console.log(res.data);
+                    commit("setTriggers", {
+                        tabaccoSmoke: res.data.tabacco_smoke,
+                        dustMites: res.data.dust_mites,
+                        airPollution: res.data.air_pollution,
+                        pets: res.data.pets,
+                        fungi: res.data.fungi,
+                        fireSmoke: res.data.fire_smoke,
+                        infections: res.data.infections,
+                        effort: res.data.effort,
+                        weatherConditions: res.data.weather_conditions,
+                        hyperventilation: res.data.hyperventilation,
+                        pollen: res.data.pollen, 
+                    });
+                    commit("setLoadingTriggers", false);
+                });
+            }
+        });
+
+        // TODO: Get notifications from user
         const notifications = {
             medicines: true,
             peakflow: true,
@@ -68,23 +131,44 @@ const actions = {
             airQuality: false,
         }
 
-        const triggers = {
-            tabaccoSmoke: false,
-            dustMites: true,
-            airPollution: true,
-            pets: false,
-            fungi: true,
-            fireSmoke: true,
-            infections: true,
-            effort: false,
-            weatherConditions: false,
-            hyperventilation: true,
-            pollen: false,
-        }
-
-        commit("setUser", user);
         commit("setNotifications", notifications);
-        commit("setTriggers", triggers);
+    },
+    updateTriggers({commit}, data) {
+        axios.put('http://localhost:8000/api/updatetriggers', data, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            commit("setTriggers", {
+                tabaccoSmoke: res.data.tabacco_smoke,
+                dustMites: res.data.dust_mites,
+                airPollution: res.data.air_pollution,
+                pets: res.data.pets,
+                fungi: res.data.fungi,
+                fireSmoke: res.data.fire_smoke,
+                infections: res.data.infections,
+                effort: res.data.effort,
+                weatherConditions: res.data.weather_conditions,
+                hyperventilation: res.data.hyperventilation,
+                pollen: res.data.pollen, 
+            });
+            router.push("/account");
+        });
+    },
+    logout({commit}) {
+        axios.post('http://localhost:8000/api/logout', {}, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            } 
+        }).then(res => {
+            console.log(res.data);
+            commit("setUser", null);
+            commit("setNotifications", null);
+            commit("setTriggers", null);
+            commit("setToken", null);
+            localStorage.removeItem("token");
+            router.push("/login");
+        });
     }
 };
 
@@ -102,6 +186,12 @@ const getters = {
         console.log(state.token !== null);
         return state.token !== null;
         //return true; // Can be used for development
+    },
+    loadingUser(state) {
+        return state.loadingUser;
+    },
+    loadingTriggers(state) {
+        return state.loadingTriggers;
     },
 };
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-form autocomplete="off">
+        <v-form v-if="!loadingUser" autocomplete="off">
             <v-card>
                 <v-card-text>
                     <p class="mb-1">Naam</p>
@@ -22,74 +22,34 @@
                         dense
                     />
 
-                    <p class="mb-1">Geboortedatum</p>
-                    <v-menu
-                        ref="dateMenu"
-                        v-model="dateMenu"
-                        :close-on-content-click="false"
-                        :return-value.sync="dateOfBirth"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="290px"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                :value="dateOfBirth | formatDate"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                                outlined
-                                dense
-                            />
-                        </template>
-                        <v-date-picker
-                            v-model="dateOfBirth"
-                            no-title
-                            scrollable
-                        >
-                            <v-spacer />
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="dateMenu = false"
-                            >
-                                Cancel
-                            </v-btn>
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="$refs.dateMenu.save(dateOfBirth)"
-                            >
-                                OK
-                            </v-btn>
-                        </v-date-picker>
-                    </v-menu>
+                    <p class="mb-1">Leeftijd</p>
+                    <v-text-field
+                        :value="age"
+                        type="number"
+                        outlined
+                        dense
+                    />
 
                     <p class="mb-1">Lengte</p>
                     <v-text-field
-                        v-model="length"
+                        v-model="height"
                         outlined 
                         dense
                         type="number"
                         suffix="cm"
                     />
-                    <p class="mb-0">Geslacht</p>
-                    <v-radio-group class="mt-1" row v-model="gender" hide-details="auto">
-                        <v-radio
-                            label="Man"
-                            value="man"
-                        />
-                        <v-radio
-                            label="Vrouw"
-                            value="women"
-                        />
-                    </v-radio-group>
                 </v-card-text>
             </v-card>
-            <v-btn class="mt-3" block color="accent" @click="changePersonalInformation">
+            <v-btn class="mt-3" block color="accent" @click="changePersonalInformation" :loading="loading" :disabled="loading">
                 Opslaan
             </v-btn>
         </v-form>
+        <v-progress-linear
+            v-else
+            rounded
+            indeterminate
+            color="accent"
+        />
     </div>
 </template>
 
@@ -101,10 +61,9 @@ export default {
             name: "",
             email: "",
             patientNumber: "",
-            dateOfBirth: "",
-            dateMenu: false,
-            length: "",
-            gender: "man",
+            age: "",
+            height: "",
+            loading: false,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -130,20 +89,29 @@ export default {
                 name: this.name,
                 email: this.email,
                 patientNumber: this.patientNumber,
-                dateOfBirth: this.dateOfBirth,
-                length: this.length,
-                gender: this.gender,
+                age: this.age,
+                height: this.height,
             }
+
+            this.loading = true;
 
             console.log(data);
 
             this.$router.push("/account");
         }
     },
+    watch: {
+        loadingUser() {
+            this.setPersonalInformationFromVuex();
+        }
+    },
     computed: {
         getUser() {
             return this.$store.getters.user;
-        }
+        },
+        loadingUser() {
+            return this.$store.getters.loadingUser;
+        },
     }
 }
 </script>
