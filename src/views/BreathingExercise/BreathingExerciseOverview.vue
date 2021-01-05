@@ -7,8 +7,10 @@
           <v-date-picker
             full-width
             v-model="picker"
-            color="blue lighten-1"
+            color="blue darken-1"
             class="date-picker"
+            :events="functionEvents"
+            event-color="green lighten-1"
           ></v-date-picker>
         </v-row>
       </v-app>
@@ -16,31 +18,73 @@
 
     <!-- Checklist -->
     <div class="taskbox">
-      <h4 class="taskbox__title">Uitgevoerde oefeningen</h4>
+      <h4 class="taskbox__title">Planning voor {{ datum }}</h4>
       <div>
-        <input type="checkbox" id="todosID1" name="todo" value="todo" v-model="completedID1">
-        <router-link class="label" to="/breathingexercise/cpmeasurement/CP1">{{ task1 }}</router-link>
+        <input
+          type="checkbox"
+          id="todosID1"
+          name="todo"
+          value="todo"
+          v-model="completedID1"
+        />
+        <router-link class="label" to="/breathingexercise/cpmeasurement/CP1">{{
+          task1
+        }}</router-link>
       </div>
       <div>
-        <input type="checkbox" id="todosID2" name="todo" value="todo" v-model="completedID2">
-        <router-link class="label" for="todo" to="/breathingexercise/list/interval">{{ task2 }}</router-link>
+        <input
+          type="checkbox"
+          id="todosID2"
+          name="todo"
+          value="todo"
+          v-model="completedID2"
+        />
+        <router-link
+          class="label"
+          for="todo"
+          to="/breathingexercise/list/interval"
+          >{{ task2 }}</router-link
+        >
       </div>
       <div>
-        <input type="checkbox" id="todosID3" name="todo" value="todo" v-model="completedID3">
-        <router-link class="label" for="todo" to="/breathingexercise/cpmeasurement/CP2">{{ task3 }}</router-link>
+        <input
+          type="checkbox"
+          id="todosID3"
+          name="todo"
+          value="todo"
+          v-model="completedID3"
+        />
+        <router-link
+          class="label"
+          for="todo"
+          to="/breathingexercise/cpmeasurement/CP2"
+          >{{ task3 }}</router-link
+        >
       </div>
     </div>
 
     <!-- Knoppen -->
     <div class="breathingexersice__button">
-      <v-btn outlined block class="breathingexercise__button--child" color="primary" to="/breathingexercise/cpstatistics">
+      <v-btn
+        
+        block
+        class="breathingexercise__button--child"
+        color="primary"
+        to="/breathingexercise/cpstatistics"
+      >
         CP Metingen statistieken
       </v-btn>
-      <v-btn outlined block class="breathingexercise__button--child" color="primary" to="/breathingexercise/list">
+      <v-btn
+        outlined
+        block
+        class="breathingexercise__button--child"
+        color="primary"
+        to="/breathingexercise/list"
+      >
         Oefeningen
       </v-btn>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -48,18 +92,98 @@ export default {
   name: "BreathingExerciseOverview",
   created() {
     this.$store.dispatch("setDefaultAppbar");
+    setInterval(this.getNow, 1000);
+    setInterval(this.clearCache, 1000);
+    window.addEventListener("load", this.onWindowLoad);
   },
   data() {
     return {
-      picker: new Date().toISOString().substr(0, 10),
-      task1: "CP Meting 1", 
-      task2: "Interval", 
+      //taken
+      task1: "CP Meting 1",
+      task2: "Interval oefening",
       task3: "CP Meting 2",
-      completedID1: localStorage.getItem('completedID1'),
-      completedID2: localStorage.getItem('completedID2'),
-      completedID3: localStorage.getItem('completedID3'),
-      test: false
+
+      //taken completion
+      completedID1: localStorage.getItem("completedID1"),
+      completedID2: localStorage.getItem("completedID2"),
+      completedID3: localStorage.getItem("completedID3"),
+
+      //tijd en datum
+      timestamp: "",
+      time: "",
+      datum: "",
+
+      //Date picker
+      picker: new Date().toISOString().substr(0, 10),
+      arrayEvents: null,
+
+      allesCompleet: null,
+      counter: localStorage.getItem("takenCounter"),
     };
+  },
+  mounted() {
+    this.arrayEvents = [...Array(1)].map(() => {
+      const day = 1;
+      const d = new Date();
+      d.setDate(day);
+      return d.toISOString().substr(0, 10);
+    });
+  },
+  methods: {
+    onWindowLoad() {
+      console.log(
+        this.completedID1,
+        this.completedID2,
+        this.completedID3,
+        this.counter
+      );
+    },
+    getNow: function () {
+      const today = new Date();
+      const date =
+        today.getDate() +
+        "/" +
+        (today.getMonth() + 1) +
+        "/" +
+        today.getFullYear();
+
+      const hours = today.getHours();
+      const minutes = today.getMinutes();
+      const seconds = today.getSeconds();
+      const time = hours + ":" + minutes + ":" + seconds;
+      const month = today.getMonth();
+      const daggoe = today.getDate();
+
+      this.uren = hours;
+      this.minuten = minutes;
+      this.seconden = seconds;
+      this.huidigeDag = daggoe;
+      this.huidigeMaand = month;
+      this.datum = date;
+      this.huidigeTijd = time;
+    },
+    
+    functionEvents(date) {
+      const [, , day] = date.split("-");
+
+      if (this.counter < 3 && this.counter > 0) {
+        if ([this.huidigeDag].includes(parseInt(day))) return ["orange"];
+      } 
+      else if (this.counter > 2) { 
+        if ([this.huidigeDag].includes(parseInt(day, 10))) return true;
+      }
+      else if (this.counter == 0) { 
+        if ([this.huidigeDag].includes(parseInt(day, 10))) return false;
+      }
+    },
+    clearCache() {
+      while (this.uren >= 0 && this.uren <= 6) {
+        localStorage.removeItem("completedID1", this.completedID1);
+        localStorage.removeItem("completedID2", this.completedID1);
+        localStorage.removeItem("completedID3", this.completedID1);
+        localStorage.removeItem("takenCounter", this.counter);
+      }
+    },
   },
 };
 </script>
@@ -67,10 +191,10 @@ export default {
 <style lang="scss" scoped>
 .taskbox {
   border-radius: 10px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 20px;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  margin: 35px 0 30px 0;
+  margin: 65px 0 30px 0;
   transform: scale(0.999);
 
   &__input {
@@ -88,7 +212,7 @@ export default {
   height: 330px;
 }
 
-.breathingexercise__button--child{
+.breathingexercise__button--child {
   margin: 20px auto;
 }
 
@@ -105,7 +229,8 @@ $green: #06842c;
 
 * {
   box-sizing: border-box;
-  &::before, &::after {
+  &::before,
+  &::after {
     box-sizing: border-box;
   }
 }
@@ -124,7 +249,7 @@ input[type="checkbox"] {
   margin: 0 10px 0 0;
   &::before {
     position: absolute;
-    content: '';
+    content: "";
     display: block;
     top: 2px;
     left: 7px;

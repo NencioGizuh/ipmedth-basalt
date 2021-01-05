@@ -22,12 +22,14 @@ export default {
       timeInSeconds: 0,
       timer: undefined,
       timerState: 0,
-      completedID1: false
+      completedID1: false,
     };
   },
   watch: {
     todos: {
-      handler() { console.log('CP metingen zijn veranderd'); },
+      handler() {
+        console.log("CP metingen zijn veranderd");
+      },
       deep: true,
     },
   },
@@ -53,7 +55,7 @@ export default {
       }
     },
     stop() {
-      if (this.timerState == 1){
+      if (this.timerState == 1) {
         clearInterval(this.timer);
         console.log("De timer is gestopt");
         this.timerState = 2;
@@ -61,10 +63,13 @@ export default {
     },
     verzend() {
       if (this.timerState == 2) {
-        console.log("Meting met waarde: " + this.timeInSeconds)
-        localStorage.setItem('CPMeting1', this.timeInSeconds)
+        console.log("Meting met waarde: " + this.timeInSeconds);
+        localStorage.setItem("CPMeting1", this.timeInSeconds);
         this.completedID1 = true;
-        localStorage.setItem('completedID1', this.completedID1)
+        this.takenCounter = localStorage.getItem('takenCounter');
+        this.takenCounter++;
+        localStorage.setItem("completedID1", this.completedID1);
+        localStorage.setItem("takenCounter", this.takenCounter);
         this.$router.push({ path: "/breathingexercise/cpstatistics" });
       }
     },
