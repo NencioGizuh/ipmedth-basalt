@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import appbar from "./modules/appbar";
 import auth from "./modules/auth";
 import peakflow from "./modules/peakflow";
+import sharedata from "./modules/share_data";
 
 import medicijnen from "./modules/medicijnen.js"
 import airquality from "./modules/airquality";
@@ -16,6 +17,7 @@ export default new Vuex.Store({
       appbar,
       auth,
       peakflow,
+      sharedata,
       medicijnen,
       registraties,
       airquality
