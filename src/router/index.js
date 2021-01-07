@@ -45,48 +45,64 @@ import UserInformation from "@/views/Register/UserInformation.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Login from "@/views/Login.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+
+const beforeEnterNotAuth = (to, from, next) => {
+    if (localStorage.getItem('token')) {
+        next();
+    } else {
+        next('/login');
+    }
+};
+
+const beforeEnterIsAuth = (to, from, next) => {
+    if (localStorage.getItem('token')) {
+        next('/dashboard');
+    } else {
+        next();
+    }
+};
 
 const routes = [
-    { path: "/account", component: AccountOverview },
-    { path: "/account/changepassword", component: ChangePassword },
-    { path: "/account/changepersonalinformation", component: ChangePersonalInformation },
-    { path: "/account/managenotifications", component: ManageNotifications },
-    { path: "/account/managetriggers", component: ManageTriggers },
-    { path: "/actionplan", component: ActionPlanOverview },
-    { path: "/actionplan/change", component: ChangeActionPlan },
-    { path: "/dashboard/:name_of_city/concentration/:name_of_concentration", component: AirConcentration },
-    { path: "/dashboard/:name_of_city/airquality", component: AirQuality },
-    { path: "/breathingexercise", component: BreathingExerciseOverview },
-    { path: "/breathingexercise/list", component: BreathingExercisesList },
+    { path: "/account", component: AccountOverview, beforeEnter: beforeEnterNotAuth },
+    { path: "/account/changepassword", component: ChangePassword, beforeEnter: beforeEnterNotAuth },
+    { path: "/account/changepersonalinformation", component: ChangePersonalInformation, beforeEnter: beforeEnterNotAuth },
+    { path: "/account/managenotifications", component: ManageNotifications, beforeEnter: beforeEnterNotAuth },
+    { path: "/account/managetriggers", component: ManageTriggers, beforeEnter: beforeEnterNotAuth },
+    { path: "/actionplan", component: ActionPlanOverview, beforeEnter: beforeEnterNotAuth },
+    { path: "/actionplan/change", component: ChangeActionPlan, beforeEnter: beforeEnterNotAuth },
+    { path: "/dashboard/:name_of_city/concentration/:name_of_concentration", component: AirConcentration, beforeEnter: beforeEnterNotAuth },
+    { path: "/dashboard/:name_of_city/airquality", component: AirQuality, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise", component: BreathingExerciseOverview, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/list", component: BreathingExercisesList, beforeEnter: beforeEnterNotAuth },
     //Interval
-    { path: "/breathingexercise/list/interval", component: IntervalExplanation },
-    { path: "/breathingexercise/list/interval/countdown", component: IntervalCountdown },
-    { path: "/breathingexercise/list/interval/runtime", component: IntervalRuntime },
+    { path: "/breathingexercise/list/interval", component: IntervalExplanation, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/list/interval/countdown", component: IntervalCountdown, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/list/interval/runtime", component: IntervalRuntime, beforeEnter: beforeEnterNotAuth },
     //CP Meting
-    { path: "/breathingexercise/cpmeasurement", component: CpMeasurement },
-    { path: "/breathingexercise/cpmeasurement/CP1", component: CP1 },
-    { path: "/breathingexercise/cpmeasurement/CP1/CP1start", component: CP1start },
-    { path: "/breathingexercise/cpmeasurement/CP2", component: CP2 },
-    { path: "/breathingexercise/cpmeasurement/CP2/CP2start", component: CP2start },
-    { path: "/breathingexercise/cpstatistics", component: CpStatistics },
+    { path: "/breathingexercise/cpmeasurement", component: CpMeasurement, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/cpmeasurement/CP1", component: CP1, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/cpmeasurement/CP1/CP1start", component: CP1start, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/cpmeasurement/CP2", component: CP2, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/cpmeasurement/CP2/CP2start", component: CP2start, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/cpstatistics", component: CpStatistics, beforeEnter: beforeEnterNotAuth },
     //Medicatie
-    { path: "/medication/add", component: AddMedication },
-    { path: "/medication", component: MedicationOverview },
-    { path: "/medication/doing", component: MedicationDoing },
-    { path: "/medication/help", component: MedicationHelp },
+    { path: "/medication/add", component: AddMedication, beforeEnter: beforeEnterNotAuth },
+    { path: "/medication", component: MedicationOverview, beforeEnter: beforeEnterNotAuth },
+    { path: "/medication/doing", component: MedicationDoing, beforeEnter: beforeEnterNotAuth },
+    { path: "/medication/help", component: MedicationHelp, beforeEnter: beforeEnterNotAuth },
     //registratie
     { path: "/register", component: Register },
     { path: "/register/astmatrigger", component: RegisterAstmaTrigger, name: "RegisterAstmaTrigger" },
 
-    { path: "/peakflow/add", component: AddPeakFlow },
-    { path: "/peakflow/:peak_flow_id", component: PeakFlowMeasurement },
-    { path: "/peakflow", component: PeakFlowOverview },
-    { path: "/peakflow/:peak_flow_id/share", component: SharePeakFlow },
+    { path: "/peakflow/add", component: AddPeakFlow, beforeEnter: beforeEnterNotAuth },
+    { path: "/peakflow/:peak_flow_id", component: PeakFlowMeasurement, beforeEnter: beforeEnterNotAuth },
+    { path: "/peakflow", component: PeakFlowOverview, beforeEnter: beforeEnterNotAuth },
+    { path: "/peakflow/:peak_flow_id/share", component: SharePeakFlow, beforeEnter: beforeEnterNotAuth },
     { path: "/saveinformation", component: SaveInformation },
     { path: "/userinformation", component: UserInformation },
-    { path: "/dashboard", component: Dashboard },
-    { path: "/login", component: Login },
+    { path: "/dashboard", component: Dashboard, beforeEnter: beforeEnterNotAuth },
+    { path: "/login", component: Login, beforeEnter: beforeEnterIsAuth },
     { path: "/", redirect: "/login" },
 ]
 

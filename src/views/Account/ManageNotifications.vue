@@ -62,7 +62,16 @@ export default {
             }
         },
         manageNotifications() {
-            // TODO: Send changes to database
+            const data = {
+                medicines: this.medicines,
+                peakflow: this.peakflow,
+                breathingExercise: this.breathingExercise,
+                airQuality: this.airQuality,
+            }
+
+            localStorage.setItem("notifications", JSON.stringify(data));
+            this.$store.commit("setNotifications", data);
+            
             this.$router.push("/account");
         }
     },

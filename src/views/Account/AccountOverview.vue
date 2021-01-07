@@ -28,7 +28,7 @@
             </v-card-text>
         </v-card>
 
-        <v-btn class="mt-3" block color="accent" @click="logout">
+        <v-btn class="mt-3" block color="accent" @click="logout" :loading="loading" :disabled="loading">
             <v-icon left>mdi-logout</v-icon>
             Uitloggen
         </v-btn>
@@ -40,13 +40,15 @@ export default {
     name: "AccountOverview",
     data() {
         return {
-            
+            loading: false,
         }
     },
     beforeRouteEnter (to, from, next) {
         next(vm => {
-            vm.$store.dispatch("setUser");
-
+            if (!vm.$store.getters.user) {
+                vm.$store.dispatch("setUser");
+            }
+            
             if (!from.path.match(/account/)) {
                 localStorage.setItem("prevRouteAccount", from.path);
             }
@@ -59,8 +61,8 @@ export default {
     },
     methods: {
         logout() {
-            // TODO: Logout user
-            this.$router.push("/");
+            this.loading = true;
+            this.$store.dispatch("logout");
         }
     }
 }

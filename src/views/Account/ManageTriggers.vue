@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-form autocomplete="off">
+        <v-form v-if="!loadingTriggers" autocomplete="off">
             <v-card>
                 <v-card-text>
                     <p><strong>Wat triggert jouw astma?</strong></p>
@@ -61,10 +61,16 @@
                     />
                 </v-card-text>
             </v-card>
-            <v-btn class="mt-3" block color="accent" @click="manageTriggers">
+            <v-btn class="mt-3" block color="accent" @click="manageTriggers" :loading="loading" :disabled="loading">
                 Opslaan
             </v-btn>
         </v-form>
+        <v-progress-linear
+            v-else
+            rounded
+            indeterminate
+            color="accent"
+        />
     </div>
 </template>
 
@@ -84,6 +90,7 @@ export default {
             weatherConditions: false,
             hyperventilation: false,
             pollen: false,
+            loading: false,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -104,14 +111,37 @@ export default {
             }
         },
         manageTriggers() {
-            // TODO: Send changes to database
-            this.$router.push("/account");
+            const data = {
+                tabaccoSmoke: this.tabaccoSmoke,
+                dust_mites: this.dustMites,
+                air_pollution: this.airPollution,
+                pets: this.pets,
+                fungi: this.fungi,
+                fire_smoke: this.fireSmoke,
+                infections: this.infections,
+                effort: this.effort,
+                weather_conditions: this.weatherConditions,
+                hyperventilation: this.hyperventilation,
+                pollen: this.pollen,
+            }
+
+            this.loading = true;
+
+            this.$store.dispatch("updateTriggers", data);
+        }
+    },
+    watch: {
+        loadingTriggers() {
+            this.setTriggersFromVuex();
         }
     },
     computed: {
         getTriggers() {
             return this.$store.getters.triggers;
-        }
+        },
+        loadingTriggers() {
+            return this.$store.getters.loadingTriggers;
+        },
     },
 }
 </script>
