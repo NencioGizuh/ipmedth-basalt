@@ -123,15 +123,18 @@ const actions = {
             }
         });
 
-        // TODO: Get notifications from user
-        const notifications = {
-            medicines: true,
-            peakflow: true,
-            breathingExercise: false,
-            airQuality: false,
+        const notifications = localStorage.getItem('notifications');
+        if(notifications) {
+            commit("setNotifications", JSON.parse(notifications));
+        } else {
+            localStorage.setItem("notifications", JSON.stringify({
+                medicines: false,
+                peakflow: false,
+                breathingExercise: false,
+                airQuality: false,
+            }));
+            commit("setNotifications", JSON.parse(localStorage.getItem('notifications')));
         }
-
-        commit("setNotifications", notifications);
     },
     updateTriggers({commit}, data) {
         axios.put('http://localhost:8000/api/updatetriggers', data, {
@@ -169,7 +172,28 @@ const actions = {
             localStorage.removeItem("token");
             router.push("/login");
         });
-    }
+    },
+    changeUser({commit}, data) {
+        return new Promise((resolve, reject) => {
+            axios.put('http://localhost:8000/api/updateuser', data, {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                } 
+            }).then(res => {
+                commit("setUser", {
+                    name: res.data.name,
+                    email: res.data.email,
+                    patientNumber: res.data.patient_number,
+                    age: res.data.age,
+                    height: res.data.height,
+                });
+                router.push("/account");
+                resolve(res.data);
+            }).catch(err => {
+                reject(err.response.data);
+            });
+        });
+    },
 };
 
 const getters = {
