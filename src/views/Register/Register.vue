@@ -206,7 +206,7 @@ export default {
           vm.errorStatus = false;
           vm.dialog = true;
           setTimeout(() => {
-            vm.$router.push('/login');
+            vm.$router.push('register/astmatrigger');
           }, 3000);
         })
         .catch(function () {
