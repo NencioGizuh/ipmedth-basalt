@@ -15,7 +15,6 @@
       class="basalt-block-orange1"
       src="@/assets/logos_en_blocks/basalt-block-orange.png"
     />
-    <!-- TODO: Stepper toevoegen zodat het process duidelijk wordt wanneer het klaar zal zijn voor de gebruiker -->
     <v-stepper v-model="e1">
     <v-stepper-header>
       <v-stepper-step
@@ -41,6 +40,15 @@
         step="3"
       >
         Medicijnen
+      </v-stepper-step>
+
+      <v-divider></v-divider>
+
+      <v-stepper-step 
+        :complete="e1 > 4"
+        step="4"
+      >
+        Reminders
       </v-stepper-step>
     </v-stepper-header>
     <v-stepper-items>
@@ -309,7 +317,7 @@
         </v-row>
         <v-row class="mt-n4 mb-n1">
           <v-col>
-              <v-checkbox v-model="astma" label="Ik heb geen triggers voor mijn astma"
+              <v-checkbox :disabled="!areEnabled" v-model="astma" label="Ik heb geen triggers voor mijn astma"
               ></v-checkbox>
           </v-col>
         </v-row>
@@ -401,90 +409,37 @@
             <v-expansion-panel-content>
               <h3>Kortwerkende bètamimetica</h3>
               <v-row no-gutters>
-                <v-col>
+                <v-col v-for="medicijn in apiMedicijen.luchtwegverwijders.kortwerkendeBetamimetica" :key="medicijn.name">
                   <v-checkbox
                     v-model="medicijnen.luchtwegverwijders"
-                    label="Salbutamol"
-                    value="salbutamol"
-                  ></v-checkbox>
-                </v-col>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Terbutaline"
-                    value="terbutaline"
+                    :label="medicijn.name | capitalize"
+                    :value="medicijn.name.toLowerCase().trim()"
                   ></v-checkbox>
                 </v-col>
               </v-row>
               <h3>Kortwerkende anticholinergica</h3>
-              <v-checkbox
+              <v-checkbox v-for="medicijn in apiMedicijen.luchtwegverwijders.kortwerkendeAnticholinergica" :key="medicijn.name"
                 v-model="medicijnen.luchtwegverwijders"
-                label="Ipratropium"
-                value="ipratropium"
+                :label="medicijn.name | capitalize"
+                :value="medicijn.name.toLowerCase().trim()"
               ></v-checkbox>
               <h3>Langwerkende bètamimetica</h3>
-              <v-row no-gutters>
-                <v-col>
+              <v-row class="mb-4" no-gutters>
+                <v-col class="mb-n6" v-for="medicijn in apiMedicijen.luchtwegverwijders.langwerkendeBetamimetica" :key="medicijn.name">
                   <v-checkbox
                     v-model="medicijnen.luchtwegverwijders"
-                    label="Formoterol"
-                    value="formoterol"
-                  ></v-checkbox>
-                </v-col>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Salmeterol"
-                    value="salmeterol"
-                  ></v-checkbox>
-                </v-col>
-              </v-row>
-              <v-row class="mt-n8" no-gutters>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Indacaterol"
-                    value="indacaterol"
-                  ></v-checkbox>
-                </v-col>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Olodaterol"
-                    value="olodaterol"
+                    :label="medicijn.name | capitalize"
+                    :value="medicijn.name.toLowerCase().trim()"
                   ></v-checkbox>
                 </v-col>
               </v-row>
               <h3>Langwerkende anticholinergica</h3>
               <v-row no-gutters>
-                <v-col>
+                <v-col class="mb-n6" v-for="medicijn in apiMedicijen.luchtwegverwijders.langwerkendeAnticholinergica" :key="medicijn.name">
                   <v-checkbox
                     v-model="medicijnen.luchtwegverwijders"
-                    label="Tiotropium"
-                    value="tiotropium"
-                  ></v-checkbox>
-                </v-col>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Aclidinium"
-                    value="aclidinium"
-                  ></v-checkbox>
-                </v-col>
-              </v-row>
-              <v-row class="mt-n8" no-gutters>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Glycopyronium"
-                    value="glycopyronium"
-                  ></v-checkbox>
-                </v-col>
-                <v-col>
-                  <v-checkbox
-                    v-model="medicijnen.luchtwegverwijders"
-                    label="Umeclidinium"
-                    value="umeclidinium"
+                    :label="medicijn.name | capitalize"
+                    :value="medicijn.name.toLowerCase().trim()"
                   ></v-checkbox>
                 </v-col>
               </v-row>
@@ -498,26 +453,11 @@
               Luchtwegbeschermer(s)
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-checkbox
-                v-model="medicijnen.luchtwegbeschermers"
-                label="Beclomethason"
-                value="beclomethason"
-              ></v-checkbox>
-              <v-checkbox
-                v-model="medicijnen.luchtwegbeschermers"
-                label="Budesonide"
-                value="budesonide"
-              ></v-checkbox>
-              <v-checkbox
-                v-model="medicijnen.luchtwegbeschermers"
-                label="Ciclesonide"
-                value="ciclesonide"
-              ></v-checkbox>
-              <v-checkbox
-                v-model="medicijnen.luchtwegbeschermers"
-                label="Fluticasonpropionaat"
-                value="fluticasonpropionaat"
-              ></v-checkbox>
+              <v-checkbox class="mb-n6" v-for="medicijn in apiMedicijen.luchtwegbeschermers" :key="medicijn.name"
+              v-model="medicijnen.luchtwegbeschermers"
+              :label="medicijn.name | capitalize"
+              :value="medicijn.name.toLowerCase().trim()">
+              </v-checkbox>
               <v-checkbox
                 v-model="medicijnen.luchtwegbeschermers"
                 label="geen"
@@ -532,10 +472,11 @@
             <v-expansion-panel-header> Neusspray </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-checkbox
-                v-model="medicijnen.neusspray"
-                label="Corticosteroid neusspray"
-                value="corticosteroid neusspray"
-              ></v-checkbox>
+              v-model="medicijnen.neusspray"
+              v-for="medicijn in apiMedicijen.neusspray" :key="medicijn.name"
+              :label="medicijn.name | capitalize"
+              :value="medicijn.name.toLowerCase().trim()">
+              </v-checkbox>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -544,10 +485,10 @@
 
       <!-- Medicatie gebruik per medicijn -->
       <div v-if="!medicijnGebruik">
-        <h1>Selecteer jouw medicijn</h1>
+        <h2>Selecteer jouw medicijn</h2>
         <div v-for="medicijn in inhalatorInformatie" :key="medicijn.name">
           <h3>{{ medicijn.name }}</h3>
-          <v-container class="lighten-5" background-color="white">
+          <v-container grid-list-xs class="lighten-5" background-color="white">
           <v-row no-gutters>
           <v-col v-for="(inhalator) in medicijn.data" :key="inhalator.inhalatorName">
           <v-card width="150" class="mb-2" :color="inhalator.color" @click="testMethode(inhalator.id, medicijn.name)">
@@ -558,7 +499,130 @@
           </v-row>
           </v-container>
         </div>
-        <v-btn :disabled="!medicineSelected" block tile @click="loginScreen" color="accent"> Opslaan </v-btn>
+        <v-btn :disabled="!medicineSelected" block tile @click="switchZone" color="accent"> Opslaan </v-btn>
+      </div>
+
+      <!-- Reminders instellen -->
+      <div v-if="!reminderInstellen">
+        <h2 class="mb-8">Wilt u herinneringen instellen van uw medicatie</h2>
+        <div class="justify-center">
+          <v-btn
+          @click="switchZone"
+          elevation="2"
+          class="mr-6"
+          >Ja</v-btn>
+          <v-btn
+            elevation="2"
+          @click="loginScreen"
+          >Misschien later</v-btn>
+        </div>
+      </div>
+
+      <!--Medicatie reminders maken -->
+      <div v-if="!reminderMedicijn">
+        <h3>Voor welk medicijn wilt u een herinnering instellen?</h3>
+        <v-container class="lighten-5" background-color="white">
+        <h4>Luchtwegverwijders</h4>
+        <v-row no-gutters>
+        <v-col v-for="chosen in inhalatorSelectedInformation.luchtwegverwijders" :key="chosen.name">
+          <v-card width="150" class="mb-2" @click="chosen.model = true">
+            <v-img width="140" :src="'http://localhost:8000' + chosen.afbeelding" alt="inhalator foto"></v-img>
+            <v-card-title class="text-caption">{{ chosen.inhalatorName}}</v-card-title>
+          </v-card>
+          <v-dialog v-model="chosen.model" width="500">
+            <v-card>
+              <v-container>
+              <h3 class="text-center">{{ chosen.inhalatorName }}</h3>
+              <div class="align-center">
+              <v-img class="align-center" width="140" :src="'http://localhost:8000' + chosen.afbeelding" alt="inhalator foto"></v-img>
+              </div>
+              <p>Hoe vaak per dag gebruik je dit medicijn</p>
+              <div class="d-flex">
+                <v-icon large class="verplaatslinks mx-xs-auto" @click="minus(chosen)">mdi-menu-left</v-icon>
+                <p class="pt-1">{{chosen.counter}}</p>
+                <v-icon large class="verplaatsrechts mx-xs-auto" @click="add(chosen)">mdi-menu-right</v-icon>
+              </div>
+              <div class="d-flex">
+              <div v-for="item in chosen.lijst" :key="item.value">
+              <v-text-field v-model="item.value" class="mr-3"
+              type="time">
+              </v-text-field>
+              </div>
+              </div>
+              <v-btn @click="chosen.model = false">Sluit</v-btn>
+              </v-container>
+            </v-card>
+          </v-dialog>
+        </v-col>
+        </v-row>
+        <h4>Luchtwegbeschermers</h4>
+        <v-row no-gutters>
+        <v-col v-for="chosen in inhalatorSelectedInformation.luchtwegbeschermers" :key="chosen.name">
+          <v-card width="150" class="mb-2" @click="chosen.model = true">
+            <v-img width="140" :src="'http://localhost:8000' + chosen.afbeelding" alt="inhalator foto"></v-img>
+            <v-card-title class="text-caption">{{ chosen.inhalatorName}}</v-card-title>
+          </v-card>
+          <v-dialog v-model="chosen.model" width="500">
+            <v-card>
+              <v-container>
+              <h3 class="text-center">{{ chosen.inhalatorName }}</h3>
+              <div class="align-center">
+              <v-img class="align-center" width="140" :src="'http://localhost:8000' + chosen.afbeelding" alt="inhalator foto"></v-img>
+              </div>
+              <p>Hoe vaak per dag gebruik je dit medicijn</p>
+              <div class="d-flex">
+                <v-icon large class="verplaatslinks mx-xs-auto" @click="minus(chosen)">mdi-menu-left</v-icon>
+                <p class="pt-1">{{chosen.counter}}</p>
+                <v-icon large class="verplaatsrechts mx-xs-auto" @click="add(chosen)">mdi-menu-right</v-icon>
+              </div>
+              <div class="d-flex">
+              <div v-for="item in chosen.lijst" :key="item.value">
+              <v-text-field v-model="item.value" class="mr-3"
+              type="time">
+              </v-text-field>
+              </div>
+              </div>
+              <v-btn @click="chosen.model = false">Sluit</v-btn>
+              </v-container>
+            </v-card>
+          </v-dialog>
+        </v-col>
+        </v-row>
+        <h4>Neusspray</h4>
+        <v-row no-gutters>
+        <v-col v-for="chosen in inhalatorSelectedInformation.neusspray" :key="chosen.name">
+          <v-card width="150" class="mb-2" @click="chosen.model = true">
+            <v-img width="140" :src="'http://localhost:8000' + chosen.afbeelding" alt="inhalator foto"></v-img>
+            <v-card-title class="text-caption">{{ chosen.inhalatorName}}</v-card-title>
+          </v-card>
+          <v-dialog v-model="chosen.model" width="500">
+            <v-card>
+              <v-container>
+              <h3 class="text-center">{{ chosen.inhalatorName }}</h3>
+              <div class="align-center">
+              <v-img class="align-center" width="140" :src="'http://localhost:8000' + chosen.afbeelding" alt="inhalator foto"></v-img>
+              </div>
+              <p>Hoe vaak per dag gebruik je dit medicijn</p>
+              <div class="d-flex">
+                <v-icon large class="verplaatslinks mx-xs-auto" @click="minus(chosen)">mdi-menu-left</v-icon>
+                <p class="pt-1">{{chosen.counter}}</p>
+                <v-icon large class="verplaatsrechts mx-xs-auto" @click="add(chosen)">mdi-menu-right</v-icon>
+              </div>
+              <div class="d-flex">
+              <div v-for="item in chosen.lijst" :key="item.value">
+              <v-text-field v-model="item.value" class="mr-3"
+              type="time">
+              </v-text-field>
+              </div>
+              </div>
+              <v-btn @click="chosen.model = false">Sluit</v-btn>
+              </v-container>
+            </v-card>
+          </v-dialog>
+        </v-col>
+        </v-row>
+        </v-container>
+        <v-btn :disabled="!reminder" block tile @click="loginScreen" color="accent"> Opslaan </v-btn>
       </div>
     </v-container>
     </v-stepper-items>
@@ -572,12 +636,27 @@ export default {
   name: "RegisterAstmaTrigger",
   data() {
     return {
+      time: null,
+      menu2: false,
+      medicineID: 0,
       e1: 1,
       medicineSelected: false,
+      areEnabled: true,
       astma: false,
       triggersOK: false,
       medicijnenOK: false,
+      reminder: false,
       valid: true,
+      reminderOK: {
+        luchtwegverwijders: false,
+        luchtwegbeschermers: false,
+        neusspray: false,
+      },
+      medicijnenEnabled: {
+        luchtwegverwijders: false,
+        luchtwegbeschermers: false,
+        neusspray: false
+      },
       active: {
         activeRook: '',
         activeHuisstofmijt: '',
@@ -605,6 +684,8 @@ export default {
       rodeZone: true,
       medicatieGebruik: true,
       medicijnGebruik: true,
+      reminderInstellen: true,
+      reminderMedicijn: true,
       boxSelected: {
         huisstofmijt: false,
         schimmels: false,
@@ -612,6 +693,19 @@ export default {
         infecties: false,
         inspanning: false,
         hyperventilatie: false
+      },
+      triggers: {
+        rook: false,
+        huisstofmijt: false,
+        luchtverontreiging: false,
+        huisdieren: false,
+        schimmels: false,
+        vuurrook: false,
+        infecties: false,
+        inspanning: false,
+        weersomstandigheden: false,
+        hyperventilatie: false,
+        pollen: false
       },
       actieplan: {
           voorMedicatieGroeneZone: "",
@@ -628,33 +722,37 @@ export default {
           rodeZoneUitleg: "",
           rodeZoneMedicijnen: ""
       },
-      triggers: {
-        rook: false,
-        huisstofmijt: false,
-        luchtverontreiging: false,
-        huisdieren: false,
-        schimmels: false,
-        vuurrook: false,
-        infecties: false,
-        inspanning: false,
-        weersomstandigheden: false,
-        hyperventilatie: false,
-        pollen: false
+      medicijnen: {
+        luchtwegverwijders: [],
+        luchtwegbeschermers: [],
+        neusspray: [],
+      },
+      apiMedicijen: {
+        luchtwegverwijders: {
+          kortwerkendeBetamimetica: [],
+          kortwerkendeAnticholinergica: [],
+          langwerkendeBetamimetica: [],
+          langwerkendeAnticholinergica: []
+        },
+        luchtwegbeschermers: [],
+        neusspray: [],
+      },
+      inhalatorSelected: [],
+      inhalatorSelectedInformation: {
+        luchtwegverwijders: [],
+        luchtwegbeschermers: [],
+        neusspray: []
       },
       zone: "groen",
-      inhalatorSelected: [],
       triggersMultiple: {
         rook: [],
         luchtverontreiging: [],
         weersomstandigheden: [],
         pollen: []
       },
-      medicijnen: {
-        luchtwegverwijders: [],
-        luchtwegbeschermers: [],
-        neusspray: [],
-      },
       inhalatorInformatie: [],
+      reminderTijden: '',
+
       rules: {
         peakflow: [
           (v) => !!v || "Peakflow is vereist",
@@ -668,8 +766,136 @@ export default {
       }
     };
   },
+  filters: {
+  capitalize: function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
+  },
   methods: {
+    add(object) {
+      var vm = this;
+      switch(object.type) {
+        case 'Luchtwegverwijders': {
+          let array = vm.inhalatorSelectedInformation.luchtwegverwijders;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if(element.inhalatorName === object.inhalatorName) {
+              if(element.counter === 3) {
+                element.counter = 3;
+              }
+              else {
+              element.counter++;
+              let object = {
+                value: ''
+              }
+              element.lijst.push(object);
+              }
+            }
+          }
+        }
+          break;
+        case 'Luchtwegbeschermers': {
+          let array = vm.inhalatorSelectedInformation.luchtwegbeschermers;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if(element.inhalatorName === object.inhalatorName) {
+              if(element.counter === 3) {
+                element.counter = 3;
+              }
+              else {
+              element.counter++;
+              let object = {
+                value: ''
+              }
+              element.lijst.push(object);
+              }
+            }
+          }
+        }
+          break;
+        case 'Neusspray': {
+          let array = vm.inhalatorSelectedInformation.neusspray;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if(element.inhalatorName === object.inhalatorName) {
+              if(element.counter === 3) {
+                element.counter = 3;
+              }
+              else {
+              element.counter++;
+              let object = {
+                value: ''
+              }
+              element.lijst.push(object);
+              }
+            }
+          }
+        }
+          break;
+      }
+    },
+    minus(object) {
+      var vm = this;
+      switch(object.type) {
+        case 'Luchtwegverwijders': {
+          let array = vm.inhalatorSelectedInformation.luchtwegverwijders;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if(element.inhalatorName === object.inhalatorName) {
+              if(element.counter === 1) {
+                element.counter = 1;
+              }
+              else {
+              element.counter--;
+              let index = element.lijst.length - 1;
+              element.lijst.splice(index, 1);
+              }
+            }
+          }
+        }
+          break;
+        case 'Luchtwegbeschermers': {
+          let array = vm.inhalatorSelectedInformation.luchtwegbeschermers;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if(element.inhalatorName === object.inhalatorName) {
+              if(element.counter === 1) {
+                element.counter = 1;
+              }
+              else {
+              element.counter--;
+              let index = element.lijst.length - 1;
+              element.lijst.splice(index, 1);
+              }
+            }
+          }
+        }
+          break;
+        case 'Neusspray': {
+          let array = vm.inhalatorSelectedInformation.neusspray;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if(element.inhalatorName === object.inhalatorName) {
+              if(element.counter === 1) {
+                element.counter = 1;
+              }
+              else {
+              element.counter--;
+              let index = element.lijst.length - 1;
+              element.lijst.splice(index, 1);
+              }
+            }
+          }
+        }
+          break;
+      }
+    },
     loginScreen() {
+      this.$store.commit("saveInhalators", this.inhalatorSelected);
+      var output = [...this.inhalatorSelectedInformation.luchtwegverwijders, ...this.inhalatorSelectedInformation.luchtwegbeschermers, ...this.inhalatorSelectedInformation.neusspray];
+      this.$store.commit("saveMedication", output);
       this.$router.push('/login');
     },
     dialogOpen(dialogName) {
@@ -716,6 +942,43 @@ export default {
           break;
       }
     },
+    getMedicineInformation() {
+      var vm = this;
+      axios.get("http://localhost:8000/api/getmedication")
+        .then(function (response) {
+          var array = response.data;
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            switch(element.type) {
+              case 'Luchtwegverwijders':
+                switch(element.subType) {
+                  case 'Kortwerkende betamimetica':
+                    vm.apiMedicijen.luchtwegverwijders.kortwerkendeBetamimetica.push(element);
+                    break;
+                  case 'Kortwerkende anticholinergica':
+                    vm.apiMedicijen.luchtwegverwijders.kortwerkendeAnticholinergica.push(element);
+                    break;
+                  case 'Langwerkende betamimetica':
+                    vm.apiMedicijen.luchtwegverwijders.langwerkendeBetamimetica.push(element);
+                    break;
+                  case 'Langwerkende anticholinergica':
+                    vm.apiMedicijen.luchtwegverwijders.langwerkendeAnticholinergica.push(element);
+                    break;
+                }
+                break;
+              case 'Luchtwegbeschermers':
+                vm.apiMedicijen.luchtwegbeschermers.push(element);
+                break;
+              case 'Neusspray':
+                vm.apiMedicijen.neusspray.push(element);
+                break;
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    },
     getInhalatorInformation() {
       return new Promise((resolve, reject) => {
       var vm = this;
@@ -746,11 +1009,126 @@ export default {
             }
           }
         }
-        //TODO: Opslaan welke inhalators beschikbaar zijn voor medijcijnen tab
       }).catch(function (error) {
         reject(error);
       })
       })
+    },
+    getChosenMedication() {
+        var vm = this;
+        var string = this.inhalatorSelected.join();
+        console.log(string);
+        axios.get("http://localhost:8000/api/choseninhalators", {
+            params: {
+                values: string
+            }
+        }).then(function (response) {
+            let array = response.data;
+            for (let index = 0; index < array.length; index++) {
+              const element = array[index];
+              switch(element.type) {
+                case 'Luchtwegverwijders': {
+                  let kortwerkendeAnticholinergica = vm.apiMedicijen.luchtwegverwijders.kortwerkendeAnticholinergica;
+                  let kortwerkendeBetamimetica = vm.apiMedicijen.luchtwegverwijders.kortwerkendeBetamimetica;
+                  let langwerkendeAnticholinergica = vm.apiMedicijen.luchtwegverwijders.langwerkendeAnticholinergica;
+                  let langwerkendeBetamimetica = vm.apiMedicijen.luchtwegverwijders.langwerkendeAnticholinergica;
+                  for (let index = 0; index < kortwerkendeAnticholinergica.length; index++) {
+                    let medicijn = kortwerkendeAnticholinergica[index];
+                    if(medicijn.name.toLowerCase() === element.gebruikMedicijn) {
+                      vm.medicineID = medicijn.id;
+                    }
+                  }
+                  for (let index = 0; index < kortwerkendeBetamimetica.length; index++) {
+                    let medicijn = kortwerkendeBetamimetica[index];
+                    if(medicijn.name.toLowerCase() === element.gebruikMedicijn) {
+                      vm.medicineID = medicijn.id;
+                    }
+                  }
+                  for (let index = 0; index < langwerkendeAnticholinergica.length; index++) {
+                    let medicijn = langwerkendeAnticholinergica[index];
+                    if(medicijn.name.toLowerCase() === element.gebruikMedicijn) {
+                      vm.medicineID = medicijn.id;
+                    }
+                  }
+                  for (let index = 0; index < langwerkendeBetamimetica.length; index++) {
+                    let medicijn = langwerkendeBetamimetica[index];
+                    if(medicijn.name.toLowerCase() === element.gebruikMedicijn) {
+                      vm.medicineID = medicijn.id;
+                    }
+                  }
+                  let object = {
+                    medicineID: vm.medicineID,
+                    inhalatorName: element.inhalatorName,
+                    gebruikMedicijn: element.gebruikMedicijn,
+                    afbeelding: element.afbeelding,
+                    type: element.type,
+                    model: false,
+                    counter: 1,
+                    lijst: [
+                      {
+                        value: ''
+                      },
+                    ]
+                  }
+                  vm.inhalatorSelectedInformation.luchtwegverwijders.push(object);
+                  vm.medicineID = 0;
+                  break;
+                }
+                case 'Luchtwegbeschermers': {
+                  let luchtwegbeschermers = vm.apiMedicijen.luchtwegbeschermers;
+                  for (let index = 0; index < luchtwegbeschermers.length; index++) {
+                    const medicijn = luchtwegbeschermers[index];
+                    if(medicijn.name.toLowerCase() === element.gebruikMedicijn) {
+                      vm.medicineID = medicijn.id;
+                    }
+                  }
+                  let object1 = {
+                    medicineID: vm.medicineID,
+                    inhalatorName: element.inhalatorName,
+                    afbeelding: element.afbeelding,
+                    type: element.type,
+                    model: false,
+                    counter: 1,
+                    lijst: [
+                      {
+                        value: ''
+                      },
+                    ]
+                  }
+                  vm.inhalatorSelectedInformation.luchtwegbeschermers.push(object1);
+                  vm.medicineID = 0;
+                  break;
+                }
+                case 'Neusspray': {
+                  let neusspray = vm.apiMedicijen.neusspray;
+                  for (let index = 0; index < neusspray.length; index++) {
+                    const medicijn = neusspray[index];
+                    if(medicijn.name.toLowerCase() === element.gebruikMedicijn) {
+                      vm.medicineID = medicijn.id;
+                    }
+                  }
+                  let object2 = {
+                    medicineID: vm.medicineID,
+                    inhalatorName: element.inhalatorName,
+                    afbeelding: element.afbeelding,
+                    type: element.type,
+                    model: false,
+                    counter: 1,
+                    lijst: [
+                      {
+                        value: ''
+                      },
+                    ]
+                  }
+                  vm.inhalatorSelectedInformation.neusspray.push(object2);
+                  vm.medicineID = 0;
+                  break;
+                }
+              }
+            }
+        }).catch(function (error) {
+            console.log(error);
+        })
     },
     switchZone() {
       var vm = this;
@@ -760,6 +1138,7 @@ export default {
           this.triggersPage = true;
           this.groeneZone = false;
           this.e1 = 2;
+          this.$store.commit("saveTriggers", this.triggers);
           break;
         case "geel":
           this.zone = "oranje";
@@ -781,8 +1160,11 @@ export default {
           this.rodeZone = true;
           this.medicatieGebruik = false;
           this.e1 = 3;
+          this.getMedicineInformation();
+          this.$store.commit("saveActionPlan", this.actieplan);
           break;
         case "medicijngebruik": 
+          this.zone = "reminderInstellen"
           this.getInhalatorInformation().then(function () {
             vm.medicatieGebruik = true;
             vm.medicijnGebruik = false;
@@ -790,6 +1172,18 @@ export default {
           .catch(function (error) {
             console.log(error);
           })
+          break;
+        case 'reminderInstellen':
+          vm.zone = "reminderMedicijn"
+          vm.medicijnGebruik = true;
+          vm.reminderInstellen = false;
+          vm.e1 = 4;
+          break;
+        case 'reminderMedicijn':
+          vm.getChosenMedication();
+          vm.reminderInstellen = true;
+          vm.reminderMedicijn = false;
+          break;
       }
     },
     selectingTrigger(box) {
@@ -848,7 +1242,7 @@ export default {
           this.triggers.infecties = false;
         }
         else {
-                  this.boxSelected.infecties = !this.boxSelected.infecties;
+        this.boxSelected.infecties = !this.boxSelected.infecties;
         this.triggers.infecties = !this.triggers.infecties;
         if(this.boxSelected.infecties === true) {
           this.active.activeInfecties = 'orange';
@@ -905,7 +1299,7 @@ export default {
             if(inhalatorID === element.id) {
             element.state = false
             element.color = '';
-            let voorval = vm.inhalatorSelected.indexOf(element);
+            let voorval = vm.inhalatorSelected.indexOf(element.id);
             vm.inhalatorSelected.splice(voorval, 1);
             }
           }
@@ -914,7 +1308,7 @@ export default {
               element.state = !element.state
               if(element.state === true) {
                 element.color = 'orange';
-                vm.inhalatorSelected.push(element);
+                vm.inhalatorSelected.push(element.id);
               }
             }
           }
@@ -924,24 +1318,89 @@ export default {
   },
   },
   watch: {
+    inhalatorSelectedInformation: {
+      //Deep = true moet er in verwerkt worden
+      handler: function () {
+      var vm = this;
+      let luchtwegverwijders = vm.inhalatorSelectedInformation.luchtwegverwijders;
+      let luchtwegbeschermers = vm.inhalatorSelectedInformation.luchtwegbeschermers;
+      let neusspray = vm.inhalatorSelectedInformation.neusspray;
+
+      for (let index = 0; index < luchtwegverwijders.length; index++) {
+        const luchtwegverwijder = luchtwegverwijders[index];
+        const listUno = luchtwegverwijder.lijst;
+        for (let index = 0; index < listUno.length; index++) {
+          const element1 = listUno[index];
+          if(element1.value === "") {
+            console.log(element1.value);
+            vm.reminderOK.luchtwegverwijders = false;
+          }
+          else {
+            console.log(element1.value);
+            vm.reminderOK.luchtwegverwijders = true;
+          }
+        }
+        for (let index = 0; index < luchtwegbeschermers.length; index++) {
+          const luchtwegbeschermer = luchtwegbeschermers[index];
+          const listDos = luchtwegbeschermer.lijst;
+          for (let index = 0; index < listDos.length; index++) {
+            const element2 = listDos[index];
+            if(element2.value === "") {
+              vm.reminderOK.luchtwegbeschermers = false;
+            }
+            else {
+              vm.reminderOK.luchtwegbeschermers = true;
+            }
+          }
+          for (let index = 0; index < neusspray.length; index++) {
+            const neus = neusspray[index];
+            const listTres = neus.lijst;
+            for (let index = 0; index < listTres.length; index++) {
+              const element3 = listTres[index];
+              if(element3.value === "") {
+                vm.reminderOK.neusspray = false;
+              }
+              else {
+                vm.reminderOK.neusspray = true;
+              }
+            }
+          }
+        }
+      }
+
+      if(vm.reminderOK.luchtwegverwijders === true && vm.reminderOK.luchtwegbeschermers === false && vm.reminderOK.neusspray === false) {
+        vm.reminder = true;
+      }
+      else if(vm.reminderOK.luchtwegverwijders === false && vm.reminderOK.luchtwegbeschermers === true && vm.reminderOK.neusspray === false) {
+        vm.reminder = true;
+      }
+      else if(vm.reminderOK.luchtwegverwijders === false && vm.reminderOK.luchtwegbeschermers === false && vm.reminderOK.neusspray === true) {
+        vm.reminder = true;
+      }
+      else if(vm.reminderOK.luchtwegverwijders === false && vm.reminderOK.luchtwegbeschermers === false && vm.reminderOK.neusspray === false) {
+        vm.reminder = false;
+      }
+      },
+      deep: true
+    },
     inhalatorSelected: function() {
       var vm = this;
-      if(vm.inhalatorSelected.length === 0) {
-        vm.medicineSelected = false;
+      if(vm.inhalatorSelected.length === 3) {
+        vm.medicineSelected = true;
       }
       else {
-        vm.medicineSelected = true;
+        vm.medicineSelected = false;
       }
     },
     medicijnen: {
       handler: function() {
         var vm = this;
-        if(vm.medicijnen.luchtwegverwijders.length === 0 & 
-          vm.medicijnen.luchtwegbeschermers.length === 0 & vm.medicijnen.neusspray.length === 0) {
-            vm.medicijnenOK = false;
-          }
+        if(vm.medicijnen.luchtwegverwijders.length === 1 & 
+          vm.medicijnen.luchtwegbeschermers.length === 1 & vm.medicijnen.neusspray.length === 1) {
+            vm.medicijnenOK = true;
+        }
         else {
-          vm.medicijnenOK = true;
+          vm.medicijnenOK = false;
         }
       },
       deep: true
@@ -964,9 +1423,11 @@ export default {
           vm.triggers.hyperventilatie === false && vm.triggers.pollen === false) 
         {
           vm.triggersOK = false;
+          vm.areEnabled = true;
         }
         else {
           vm.triggersOK = true;
+          vm.areEnabled = false;
         }
       },
       deep: true
@@ -1039,6 +1500,12 @@ export default {
 </script>
 
 <style lang="scss">
+.verplaatslinks {
+  margin-left: 35%;
+}
+.verplaatsrechts {
+  margin-right: 35%;
+}
 .basalt-block-blue1 {
   position: fixed;
   top: 320px;
