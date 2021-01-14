@@ -172,6 +172,7 @@ export default {
         ],
         patientnummerRules: [
           (v) => !!v || "Patientnummer is vereist",
+          (v) => /^\d{7}$/.test(v) || "Een patientnummer kan maar uit acht getallen bestaan",
           (v) => /\d/.test(v) || "Patientnummer bestaat uit nummers",
         ],
         wachtwoordRules: [
@@ -206,7 +207,7 @@ export default {
           vm.errorStatus = false;
           vm.dialog = true;
           setTimeout(() => {
-            vm.$router.push('/login');
+            vm.$router.push('register/astmatrigger');
           }, 3000);
         })
         .catch(function () {

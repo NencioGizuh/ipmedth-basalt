@@ -4,8 +4,11 @@ const state = {
     registratie: {},
     registratieErrors: {},
     inloggen: {},
-    inloggenErrors: {}
-
+    inloggenErrors: {},
+    triggers: {},
+    actionplan: {},
+    medication: [],
+    inhalators: []
 }
 
 const mutations = {
@@ -21,6 +24,18 @@ const mutations = {
     saveLoginErrors: (state, payload) => {
         state.inloggenErrors = payload
     },
+    saveTriggers: (state, payload) => {
+        state.triggers = payload;
+    },
+    saveActionPlan: (state, payload) => {
+        state.actionplan = payload;
+    },
+    saveInhalators: (state, payload) => {
+        state.inhalators = payload;
+    },
+    saveMedication: (state, payload) => {
+        state.medication = payload;
+    }
 };
 
 const actions = {
@@ -89,6 +104,12 @@ const actions = {
             localStorage.setItem("token", response.data.access_token);
             dispatch('setActionPlanFromDatabase');
             dispatch('setPeakFlow');
+            //Triggers
+            dispatch('createTriggersUser');
+            //Actieplan
+            dispatch('createActionPlanUser');
+            //Medicatiegebruik
+            dispatch('createMedicationUser');
         }).catch(function (error) {
             reject(error);
             console.log(error.response);
@@ -105,6 +126,70 @@ const actions = {
             commit("saveLoginErrors", object);
         })
     })
+    },
+    createTriggersUser() {
+        axios.post("http://localhost:8000/api/createtriggers", {
+            tobacco_smoke: state.triggers.rook,
+            dust_mites: state.triggers.huisstofmijt,
+            air_pollution: state.triggers.luchtverontreiniging,
+            pets: state.triggers.huisdieren,
+            fungi: state.triggers.schimmels,
+            fire_smoke: state.triggers.vuurrrook,
+            infections: state.triggers.infecties,
+            effort: state.triggers.inspanning,
+            weather_conditions: state.triggers.weersomstandigheden,
+            hyperventilation: state.triggers.hyperventilatie,
+            pollen: state.triggers.pollen,
+        },{
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            }
+        }).then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        })
+    },
+    createActionPlanUser() {
+        axios.post("http://localhost:8000/api/createactionplan", {
+            zone_green_peakflow_before_medicines: state.actionplan.voorMedicatieGroeneZone,
+            zone_green_peakflow_after_medicines: state.actionplan.naMedicatieGroeneZone,
+            zone_green_explanation: null,
+            zone_yellow_peakflow_below: state.actionplan.voorMedicatieGeleZone,
+            zone_yellow_peakflow_above: state.actionplan.naMedicatieGeleZone,
+            zone_yellow_medicines: null,
+            zone_yellow_explanation: null,
+            phonenumber_gp: state.actionplan.voorMedicatieOranjeZone,
+            phonenumber_lung_specialist: state.actionplan.naMedicatieOranjeZone,
+            zone_orange_explanation: null,
+            zone_red_peakflow: state.actionplan.voorMedicatieRodeZone,
+            zone_red_medicines: null,
+            zone_red_explanation: null,
+        }, {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                }
+        }).then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        })
+    },
+    createMedicationUser() {
+        for (let index = 0; index < state.medication.length; index++) {
+            const value = state.medication[index];
+            for (let index = 0; index < value.lijst.length; index++) {
+                const element = value.lijst[index];
+                axios.post("http://localhost:8000/api/createmedicationsuser", {
+                    time: element.value,
+                    medicine_id: value.medicineID,
+                }, {
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    }
+                })
+            }
+        }
     },
 };
 

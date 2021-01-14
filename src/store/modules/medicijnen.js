@@ -1,3 +1,4 @@
+import axios from "axios";
 const state = {
     medicijnen: [
         {
@@ -76,6 +77,9 @@ const state = {
 }
 
 const mutations = {
+    saveMedicijnen: (state, payload) => {
+        state.medicijnen = payload;
+    },
     saveMedicijn: (state, payload) => {
         state.medicijnen_tijden.push(payload) 
     },
@@ -85,7 +89,19 @@ const mutations = {
 };
 
 const actions = {
-
+    retrieveInhalators({rootState, commit}) {
+        var string = rootState.registraties.inhalators.join();
+        axios.get("http://localhost:8000/api/choseninhalators", {
+        }, {
+            params: {
+                values: string
+            }
+        }).then(function (response) {
+            commit('saveMedicijnen', response.data);
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
 };
 
 const getters = {
