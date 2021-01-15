@@ -102,6 +102,7 @@ const actions = {
             resolve(response)
             commit("setToken", response.data.access_token);
             localStorage.setItem("token", response.data.access_token);
+            dispatch('setUser');
             dispatch('setActionPlanFromDatabase');
             dispatch('setPeakFlow');
             //Triggers
