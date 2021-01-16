@@ -223,6 +223,7 @@
             <v-row class="pt-2">
                 <v-col v-if="getPhoneNumberGP">
                     <v-btn 
+                        id="buttonGP"
                         block
                         color="accent" 
                         :href="`tel:${getPhoneNumberGP}`"
@@ -230,6 +231,7 @@
                 </v-col>
                 <v-col v-if="getPhoneNumberLungSpecialist">
                     <v-btn 
+                        id="buttonLungSpecialist"
                         block 
                         color="accent" 
                         :href="`tel:${getPhoneNumberLungSpecialist}`"
