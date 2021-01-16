@@ -103,14 +103,14 @@ const actions = {
             commit("setToken", response.data.access_token);
             localStorage.setItem("token", response.data.access_token);
             dispatch('setUser');
-            dispatch('setActionPlanFromDatabase');
-            dispatch('setPeakFlow');
             //Triggers
             dispatch('createTriggersUser');
             //Actieplan
             dispatch('createActionPlanUser');
             //Medicatiegebruik
             dispatch('createMedicationUser');
+            dispatch('setActionPlanFromDatabase');
+            dispatch('setPeakFlow');
         }).catch(function (error) {
             reject(error);
             console.log(error.response);

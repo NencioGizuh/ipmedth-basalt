@@ -1,5 +1,68 @@
 <template>
   <div>
+    <v-dialog v-model="dialog" width="500">
+      <v-card>
+        <v-card-title class="mb-2">Luchtmeetnet Index</v-card-title>
+        <v-card-subtitle>De luchtmeetnet LKi neemt alle concentraties
+                        die mogelijk schade kunnen veroorzaken aan
+                        Uw gezondheid op in het cijfer dat de 
+                        luchtkwaliteit bepaalt 
+        </v-card-subtitle>
+        <v-row no-gutters>
+          <v-col class="mb-2">
+            <v-card flat>
+                  <v-list-item three-line>
+      <v-list-item-content>
+        <v-list-item-title class="headline mb-1">
+          Laag, 0-3
+        </v-list-item-title>
+        <v-list-item-subtitle>De lucht is schoon</v-list-item-subtitle>
+      </v-list-item-content>
+
+             <v-progress-circular color="green" :value="100" :size="85"> 
+              <div class="text">1</div>
+              </v-progress-circular>
+    </v-list-item>
+            </v-card>
+          </v-col>
+
+                    <v-col class="mb-2">
+            <v-card flat>
+                  <v-list-item three-line>
+      <v-list-item-content>
+        <v-list-item-title class="headline mb-1">
+          Matig, 4-7
+        </v-list-item-title>
+        <v-list-item-subtitle>De lucht is niet heel schoon</v-list-item-subtitle>
+      </v-list-item-content>
+
+             <v-progress-circular color="#FEF995" :value="100" :size="85"> 
+              <div class="text">5</div>
+              </v-progress-circular>
+    </v-list-item>
+            </v-card>
+          </v-col>
+            <v-col class="mb-5">
+            <v-card flat>
+                  <v-list-item three-line>
+      <v-list-item-content>
+        <v-list-item-title class="headline mb-1">
+          Slecht, 8-11
+        </v-list-item-title>
+        <v-list-item-subtitle>De lucht is heel vuil</v-list-item-subtitle>
+      </v-list-item-content>
+
+             <v-progress-circular color="#ED462F" :value="100" :size="85"> 
+              <div class="text">9</div>
+              </v-progress-circular>
+    </v-list-item>
+            </v-card>
+          </v-col>
+        </v-row>
+
+        
+      </v-card>
+    </v-dialog>
     <v-card class="mb-2">
       <v-list-item three-line>
         <v-list-item-content class="mb-n4">
@@ -14,7 +77,7 @@
           }}</v-card-title>
           <v-card-subtitle>{{ currentDate }}, lokale tijd</v-card-subtitle>
         </v-list-item-content>
-        <v-progress-circular @click="airQualityIndex" :color="colorStroke" :value="100" :size="75"> 
+        <v-progress-circular @click="dialog = true" :color="colorStroke" :value="100" :size="75"> 
             <div class="text">{{ currentConcentration }}</div>
         </v-progress-circular>
       </v-list-item>
@@ -113,11 +176,8 @@ export default {
             }
         },
         loaded: false,
+        dialog: false,
         concentrationChange: "lki",
-        celsius: 0,
-        windSpeed: 0,
-        uvIndex: 0,
-        humidity: 0,
         color: "",
         airQualityPerHour: "",
         height: 200,
@@ -130,9 +190,6 @@ export default {
         OverviewBar
     },
     methods: {
-    airQualityIndex() {
-        this.$router.push("/dashboard/airquality/index");
-    },
     //Deze functie zorgt voor het individueel kleuren geven van data in de barchart per concentratie
     decideConcentration(concentrationName, concentrationValue) {
         switch(concentrationName) {
@@ -326,8 +383,8 @@ export default {
         axios.get("https://api.luchtmeetnet.nl/open_api/concentrations", {
                     params: {
                         formula: this.concentrationChange,
-                        longitude: this.$store.state.longitude,
-                        latitude: this.$store.state.latitude,
+                        longitude: this.$store.state.airquality.longitude,
+                        latitude: this.$store.state.airquality.latitude,
                     },
                 }).then( function (response) {
                     console.log(response);
@@ -388,19 +445,31 @@ export default {
     },
     computed: {
         locationUser() {
-            return this.$store.state.locationUser;
+            return this.$store.state.airquality.locationUser;
         },
         currentAirquality() {
-            return this.$store.state.currentAirquality;
+            return this.$store.state.airquality.currentAirquality;
         },
         currentDate() {
-            return this.$store.state.currentDate;
+            return this.$store.state.airquality.currentDate;
         },
         colorStroke() {
-            return this.$store.state.colorStroke;
+            return this.$store.state.airquality.colorStroke;
         },
         currentConcentration() {
-            return this.$store.state.currentConcentration;
+            return this.$store.state.airquality.currentConcentration;
+        },
+        celsius() {
+          return this.$store.state.airquality.celsius;
+        },
+        windSpeed() {
+          return this.$store.state.airquality.windSpeed;
+        },
+        uvIndex() {
+          return this.$store.state.airquality.uvIndex;
+        },
+        humidity() {
+          return this.$store.state.airquality.humidity;
         },
         myStyles () {
         return {
@@ -416,25 +485,7 @@ export default {
     },
     created() {
         var vm = this;
-        console.log(vm.concentrations[vm.concentrationChange]);
-        axios.get("http://api.weatherstack.com/current", {
-            params: {
-                access_key: "6bad04e7584ead55a0bf6de38174600d",
-                query: this.$store.state.fullLocation,
-                units: "m",
-            },
-        })
-        .then(function (response) {
-            console.log(response.data.current);
-            vm.celsius = response.data.current.temperature;
-            vm.windSpeed = response.data.current.wind_speed;
-            vm.uvIndex = response.data.current.uv_index;
-            vm.humidity = response.data.current.humidity;
-
-        })
-         .catch(function (error) {
-          console.log(error);
-        });
+        this.$store.dispatch("getWeatherData");
         vm.getConcentration(); 
     },
     beforeRouteEnter (to, from, next) {
