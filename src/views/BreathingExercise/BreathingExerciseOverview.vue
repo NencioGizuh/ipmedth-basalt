@@ -25,11 +25,13 @@
           id="todosID1"
           name="todo"
           value="todo"
-          v-model="completedID1"
+          v-model="this.cp1Completed"
         />
-        <router-link class="label" to="/breathingexercise/cpmeasurement/CP1">{{
-          task1
-        }}</router-link>
+        <router-link 
+          class="label" 
+          to="/breathingexercise/cpmeasurement/CP1"
+          >{{task1}}
+          </router-link>
       </div>
       <div>
         <input
@@ -37,7 +39,7 @@
           id="todosID2"
           name="todo"
           value="todo"
-          v-model="completedID2"
+          v-model="this.intervalCompleted"
         />
         <router-link
           class="label"
@@ -52,7 +54,7 @@
           id="todosID3"
           name="todo"
           value="todo"
-          v-model="completedID3"
+          v-model="this.cp2Completed"
         />
         <router-link
           class="label"
@@ -66,7 +68,7 @@
     <!-- Knoppen -->
     <div class="breathingexersice__button">
       <v-btn
-        
+        outlined
         block
         class="breathingexercise__button--child"
         color="primary"
@@ -90,6 +92,17 @@
 <script>
 export default {
   name: "BreathingExerciseOverview",
+  computed: {
+    getCp1Completed(){
+      return this.$store.getters.getCp1Completed
+    }, 
+    getCp2Completed(){
+      return this.$store.getters.getCp2Completed
+    }, 
+    getIntervalCompleted(){
+      return this.$store.getters.getIntervalCompleted
+    }, 
+  },
   created() {
     this.$store.dispatch("setDefaultAppbar");
     setInterval(this.getNow, 1000);
@@ -98,15 +111,14 @@ export default {
   },
   data() {
     return {
-      //taken
-      task1: "CP Meting 1",
-      task2: "Interval oefening",
-      task3: "CP Meting 2",
+      task1: "CP Meting 1", 
+      task2: "Interval",
+      task3: "CP Meting 2", 
 
-      //taken completion
-      completedID1: localStorage.getItem("completedID1"),
-      completedID2: localStorage.getItem("completedID2"),
-      completedID3: localStorage.getItem("completedID3"),
+      //taken
+      cp1Completed: this.$store.getters.getCp1Completed,
+      cp2Completed: this.$store.getters.getCp2Completed,
+      intervalCompleted: this.$store.getters.getIntervalCompleted,
 
       //tijd en datum
       timestamp: "",
@@ -116,9 +128,6 @@ export default {
       //Date picker
       picker: new Date().toISOString().substr(0, 10),
       arrayEvents: null,
-
-      allesCompleet: null,
-      counter: localStorage.getItem("takenCounter"),
     };
   },
   mounted() {
@@ -132,10 +141,9 @@ export default {
   methods: {
     onWindowLoad() {
       console.log(
-        this.completedID1,
-        this.completedID2,
-        this.completedID3,
-        this.counter
+        this.cp1Completed,
+        this.intervalCompleted,
+        this.cp2Completed,
       );
     },
     getNow: function () {
@@ -166,22 +174,14 @@ export default {
     functionEvents(date) {
       const [, , day] = date.split("-");
 
-      if (this.counter < 3 && this.counter > 0) {
-        if ([this.huidigeDag].includes(parseInt(day))) return ["orange"];
-      } 
-      else if (this.counter > 2) { 
+      if (this.cp1Completed == true && this.cp2Completed == true && this.intervalCompleted == true) {
         if ([this.huidigeDag].includes(parseInt(day, 10))) return true;
+      } 
+      else if(this.cp1Completed == false && this.cp2Completed == false && this.intervalCompleted == false){ 
+        if ([this.huidigeDag].includes(parseInt(day))) return false;
       }
-      else if (this.counter == 0) { 
-        if ([this.huidigeDag].includes(parseInt(day, 10))) return false;
-      }
-    },
-    clearCache() {
-      while (this.uren >= 0 && this.uren <= 6) {
-        localStorage.removeItem("completedID1", this.completedID1);
-        localStorage.removeItem("completedID2", this.completedID1);
-        localStorage.removeItem("completedID3", this.completedID1);
-        localStorage.removeItem("takenCounter", this.counter);
+      else {
+        if ([this.huidigeDag].includes(parseInt(day))) return ['orange'];
       }
     },
   },

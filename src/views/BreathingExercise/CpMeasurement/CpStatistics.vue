@@ -17,7 +17,38 @@
 <script>
 export default {
   name: "CpStatistics",
-  myStorage: window.localStorage,
+  created () {
+    setInterval(this.getNow, 1000);
+  },
+  data() {
+    return {
+      dataCP: [
+        {
+          name: "first CP",
+          color: "blue",
+          data: {
+            [new Date().toISOString().substr(0,10)]: this.$store.getters.getCp1Meting,
+          },
+        },
+        {
+          name: "second CP",
+          color: "lightblue",
+          data: {
+            [new Date().toISOString().substr(0,10)]: this.$store.getters.getCp2Meting,
+          },
+        },
+      ],
+      averageCP: [
+        {
+          name: "Average CP",
+          color: "green",
+          data: {
+            [new Date().toISOString().substr(0,10)]: this.$store.getters.getAverageCP,
+          },
+        },
+      ],
+    };
+  },
   methods: {
     getNow: function () {
       const today = new Date();
@@ -27,49 +58,8 @@ export default {
         (today.getMonth() + 1) +
         "-" +
         today.getDate();
-      const time =
-        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      const dateTime = date + " " + time;
-      this.timestamp = dateTime;
+      this.timestamp = date;
     },
-    clearCache() {
-      if (this.uren >= 0 && this.uren <= 6) {
-        localStorage.removeItem("CPMeting1");
-        localStorage.removeItem("CPMeting2");
-      }
-    }
-  },
-  data() {
-    return {
-      dataCP: [
-        {
-          name: "first CP",
-          color: "red",
-          data: {
-            currentDate: localStorage.getItem("CPMeting1"),
-          },
-        },
-        {
-          name: "second CP",
-          color: "green",
-          data: {
-            currentDate: localStorage.getItem("CPMeting2"),
-          },
-        },
-      ],
-      averageCP: [
-        {
-          name: "Average CP",
-          color: "blue",
-          data: {
-            "26-11-2020": 6,
-            "27-11-2020": 8,
-            "28-11-2020": 9,
-            "29-11-2020": 7,
-          },
-        },
-      ],
-    };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
