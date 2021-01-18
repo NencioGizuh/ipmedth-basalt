@@ -15,20 +15,17 @@
               <h1 align="center" justify="center" v-show="count" > <br/><br/>{{ countDown }} </h1>
               
               <!-- Laat alleen zien wanneer medicatieOpgeslagen true is, wat gebeurd als de carousel page op 7 staat. -->
-              
               <v-container v-show="medicatieOpgeslagen" class="grey lighten-5 mb-6 mt-5" justify="center" align="center">
-                <h4 align="center" class="mb-5">Ik neem nog een puf</h4>
+                <h4 align="center" class="mb-5">U heeft uw medicatie genomen</h4>
                 <v-row align="center" no-gutters style="">
                   <v-col>
-                    <v-card to="/medication"  color="accent" class="pa-2 ma-1" align="center" outlined tile> Klaar </v-card>
+                    <v-card to="/medication"  color="accent" class="pa-2 ma-1" align="center" outlined tile> Overzicht </v-card>
                   </v-col>
-                  <v-col>
-                    <v-card to="/medication" class="pa-2 ma-1 primary" :disabled="true" align="center" outlined tile >Logboek</v-card>
+                  <v-col @click="medicationHelpReset()">
+                    <v-card class="pa-2 ma-1 primary" :disabled="true" align="center" outlined tile >Nog eens</v-card>
                   </v-col>
                 </v-row>
               </v-container>
-
-
             </div>
           </v-row>
         </v-sheet>
@@ -38,7 +35,6 @@
 </template>
 
 <script>
-
 import image1 from "@/assets/medicatie_hulp/medicatie_luchtverwijderaar_1.png"
 import image2 from "@/assets/medicatie_hulp/medicatie_luchtverwijderaar_2.png"
 import image3 from "@/assets/medicatie_hulp/medicatie_luchtverwijderaar_3.png"
@@ -82,8 +78,9 @@ export default {
         document.getElementsByClassName("v-icon notranslate mdi mdi-numeric-0 theme--dark")[0].className = "v-icon notranslate mdi mdi-numeric-"+(elem_icon+1) +" theme--dark";
       }
     },
-    setCounter(){
-
+    medicationHelpReset(){
+      var elem_icon1 = document.getElementsByClassName("v-icon notranslate mdi mdi-numeric-1")[0].click();
+      console.log(elem_icon1);
     },
     countDownTimer() {
       var page_value = document.getElementsByClassName("v-item--active")[0].value;
@@ -131,9 +128,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 
-#carousel_card_medicatie .v-btn--outlined .v-btn__content .v-icon, .v-btn--round .v-btn__content .v-icon {
+#carousel_card_medicatie .v-btn--outlined .v-btn__content .v-icon, #carousel_card_medicatie .v-btn--round .v-btn__content .v-icon {
     color: black;
 }
 .hulp_displaytext_medicatie{
