@@ -44,25 +44,11 @@
 
 <script>
 import moment from "moment";
-import { Plugins } from "@capacitor/core";
-const { Geolocation } = Plugins;
-import axios from "axios";
 import AirqualityBar from "./AirqualityBar.vue";
 export default {
   data() {
     return {
-      initalized: false,
-      loaded: false,
-      chartdata: {
-        labels: [],
-        datasets: [
-          {
-            minBarLength: 2,
-            backgroundColor: [],
-            data: [],
-          },
-        ],
-      },
+      laden: false,
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -106,8 +92,6 @@ export default {
           ],
         },
       },
-      color: "",
-      airQualityPerHour: "",
       height: 100,
     };
   },
@@ -121,230 +105,78 @@ export default {
     checkDevice() {
         var vm = this;
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            this.getGeolocationMobile()
+            this.$store.dispatch("getGeolocationMobile")
+            //this.getGeolocationMobile()
             .then(function (response) {
                 console.log(response);
-                vm.reverseGeocoding();
-                vm.airConcentrations();
+                //vm.reverseGeocoding();
+                vm.$store.dispatch("reverseGeocoding");
+                //vm.airConcentrations();
+                vm.$store.dispatch("airConcentrations");
             })
             .catch(function (error) {
                 console.error(error);
             })
         }
         else {
-            this.getGeolocationDesktop()
+            this.$store.dispatch("getGeolocationDesktop")
+            //this.getGeolocationDesktop()
             .then(function (response) {
                 console.log(response);
-                vm.reverseGeocoding();
-                vm.airConcentrations();
+                //vm.reverseGeocoding();
+                vm.$store.dispatch("reverseGeocoding");
+                //vm.airConcentrations();
+                vm.$store.dispatch("airConcentrations");
             })
             .catch(function (error) {
                 console.error(error);
             })
         }
     },
-    getGeolocationMobile() {
-        var vm = this;
-        return new Promise((resolve, reject) => {
-            Geolocation.getCurrentPosition()
-                .then(function (response) {
-                resolve(response);
-                console.log(response);
-                vm.$store.state.longitude = response.coords.longitude;
-                vm.$store.state.latitude = response.coords.latitude;
-            })
-            .catch(function (error) {
-                reject(error);
-                console.log(error);
-            });
-        })
-    },
-    getGeolocationDesktop() {
-        return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position);
-            resolve(position);
-            this.$store.state.latitude = position.coords.latitude;
-            this.$store.state.longitude = position.coords.longitude;
-          },
-          (error) => {
-            reject(error);
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                 console.error("User denied the request for Geolocation.");
-                break;
-              case error.POSITION_UNAVAILABLE:
-                console.error("Location information is unavailable.");
-                break;
-              case error.TIMEOUT:
-                console.error("The request to get user location timed out.");
-                break;
-              case error.UNKNOWN_ERROR:
-                console.error("An unknown error occurred.");
-                break;
-            }
-          }
-        );
-        });
-     },
-    reverseGeocoding() {
-        var vm = this;
-          axios.get("http://www.mapquestapi.com/geocoding/v1/reverse", {
-          params: {
-            key: "SGTAMDyeoX9iqBrAGn8KVEuKHAIvC2HK",
-            location:
-              this.$store.state.latitude + "," + this.$store.state.longitude,
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-          console.log(response.data.results);
-          for (let index = 0; index < response.data.results.length; index++) {
-            const element = response.data.results[index];
-            for (let index = 0; index < element.locations.length; index++) {
-              const location = element.locations[index];
-              console.log(location);
-              vm.$store.state.locationUser = location.street;
-              vm.$store.state.fullLocation =
-                location.street + ", " + location.adminArea5;
-              console.log(vm.$store.state.locationUser);
-            }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    airConcentrations() {
-        var vm = this;
-        axios.get("https://api.luchtmeetnet.nl/open_api/concentrations", {
-          params: {
-            formula: "LKI",
-            longitude: this.$store.state.longitude,
-            latitude: this.$store.state.latitude,
-          },
-        })
-        .then(function (response) {
-          console.log(response.data.data);
-          for (let index = 0; index < response.data.data.length; index++) {
-            const element = response.data.data[index];
-            const currentTime = moment().format("YYYY-MMM-DD HH:00");
-            if (
-              moment(currentTime).isSame(
-                moment(element.timestamp_measured).format("YYYY-MM-DD HH:mm")
-              )
-            ) {
-              vm.colorScheme(element.value);
-              vm.$store.state.colorStroke = vm.color;
-              vm.$store.state.currentAirquality = vm.airQualityPerHour;
-              vm.$store.state.currentConcentration = Math.round(element.value);
-              vm.chartdata.labels.push(
-                moment(element.timestamp_measured).format("YYYY-MM-DD HH:mm")
-              );
-              vm.chartdata.datasets[0].backgroundColor.push(vm.color);
-              vm.chartdata.datasets[0].data.push(element.value);
-            } else {
-              vm.colorScheme(element.value);
-              vm.chartdata.labels.push(
-                  moment(element.timestamp_measured).format("YYYY-MM-DD HH:mm")
-               );
-              vm.chartdata.datasets[0].backgroundColor.push(vm.color);
-              vm.chartdata.datasets[0].data.push(element.value);
-            }
-          }
-          vm.loaded = true;
-          vm.initalized = true;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
     overviewConcentration() {
       var vm = this;
       const path = "/dashboard/" + `${vm.$store.state.locationUser}` + "/airquality";
       this.$router.push(path);
     },
-    colorScheme(colorValue) {
-      this.color = "";
-      const round = Math.round(colorValue);
-      console.log(round);
-      switch (round) {
-        case 1:
-          this.color = "#16B729";
-          this.airQualityPerHour = "Goed";
-          break;
-        case 2:
-          this.color = "#19d12f";
-          this.airQualityPerHour = "Goed";
-          break;
-        case 3:
-          this.color = "#1bf234";
-          this.airQualityPerHour = "Goed";
-          break;
-        case 4:
-          this.color = "#FFFECE";
-          this.airQualityPerHour = "Matig";
-          break;
-        case 5:
-          this.color = "#FFFF95";
-          this.airQualityPerHour = "Matig";
-          break;
-        case 6:
-          this.color = "#FEFF00";
-          this.airQualityPerHour = "Matig";
-          break;
-        case 7:
-          this.color = "#FFCA01";
-          this.airQualityPerHour = "Onvoldoende";
-          break;
-        case 8:
-          this.color = "#FF9601";
-          this.airQualityPerHour = "Onvoldoende";
-          break;
-        case 9:
-          this.color = "#FF4901";
-          this.airQualityPerHour = "Zeer slecht";
-          break;
-        case 10:
-          this.color = "#FE0A00";
-          this.airQualityPerHour = "Zeer slecht";
-          break;
-        case 11:
-          this.color = "#640094";
-          this.airQualityPerHour = "Zeer slecht";
-          break;
-        default:
-          this.color = "";
-          break;
-      }
-  },
 },
   computed: {
+    locationUser() {
+      return this.$store.state.airquality.locationUser;
+    },
+    loaded() {
+      return this.$store.state.airquality.loaded;
+    },
+    initalized() {
+      return this.$store.state.airquality.initalized;
+    },
+    colorStroke() {
+      return this.$store.state.airquality.colorStroke;
+    },
+    currentConcentration() {
+      return this.$store.state.airquality.currentConcentration;
+    },
+    currentAirquality() {
+      return this.$store.state.airquality.currentAirquality;
+    },
+    currentDate() {
+      return this.$store.state.airquality.currentDate;
+    },
+    airQualityPerHour() {
+      return this.$store.state.airquality.airQualityPerHour;
+    },
+    chartdata() {
+      return this.$store.state.airquality.chartdata;
+    },
     myStyles() {
       return {
         height: `${this.height}px`,
         position: "relative",
       };
-    },
-    locationUser() {
-      return this.$store.state.locationUser;
-    },
-    currentAirquality() {
-      return this.$store.state.currentAirquality;
-    },
-    currentDate() {
-      return this.$store.state.currentDate;
-    },
-    colorStroke() {
-      return this.$store.state.colorStroke;
-    },
-    currentConcentration() {
-      return this.$store.state.currentConcentration;
-    },
+    }
   },
   created() {
-    this.$store.state.currentDate = moment().format("MMM DD HH:mm");
+    console.log(this.$store.state.airquality);
+    this.$store.state.airquality.currentDate = moment().format("MMM DD HH:mm");
     this.initalizeComponent();
   },
 }
