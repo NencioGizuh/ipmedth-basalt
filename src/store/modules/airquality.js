@@ -155,6 +155,9 @@ const actions = {
           },
         })
         .then(function (response) {
+          state.chartdata.labels = [];
+          state.chartdata.datasets[0].backgroundColor = [];
+          state.chartdata.datasets[0].data = [];
           for (let index = 0; index < response.data.data.length; index++) {
             const element = response.data.data[index];
             const currentTime = moment().format("YYYY-MMM-DD HH:00");
