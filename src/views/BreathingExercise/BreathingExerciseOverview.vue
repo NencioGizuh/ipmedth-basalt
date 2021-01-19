@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "BreathingExerciseOverview",
   computed: {
@@ -137,15 +138,16 @@ export default {
       d.setDate(day);
       return d.toISOString().substr(0, 10);
     });
+    axios.get('http://localhost:8000/api/getbreathingexerciseuser')
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+        this.errored = true
+      })
   },
   methods: {
-    onWindowLoad() {
-      console.log(
-        this.cp1Completed,
-        this.intervalCompleted,
-        this.cp2Completed,
-      );
-    },
     getNow: function () {
       const today = new Date();
       const date =
@@ -178,10 +180,10 @@ export default {
         if ([this.huidigeDag].includes(parseInt(day, 10))) return true;
       } 
       else if(this.cp1Completed == false && this.cp2Completed == false && this.intervalCompleted == false){ 
-        if ([this.huidigeDag].includes(parseInt(day))) return false;
+        if ([this.huidigeDag].includes(parseInt(day, 10))) return false;
       }
       else {
-        if ([this.huidigeDag].includes(parseInt(day))) return ['orange'];
+        if ([this.huidigeDag].includes(parseInt(day, 10))) return ['orange'];
       }
     },
   },

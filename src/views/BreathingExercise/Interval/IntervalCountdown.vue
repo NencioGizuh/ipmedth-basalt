@@ -39,8 +39,8 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.$store.dispatch("setAppbarDetails", {
-        appbarText: "Interval exercise",
-        appbarCloseRoute: "/breathingexercise",
+        appbarText: "Interval oefening",
+        appbarCloseRoute: "/breathingexercise/list/",
       });
     });
   },

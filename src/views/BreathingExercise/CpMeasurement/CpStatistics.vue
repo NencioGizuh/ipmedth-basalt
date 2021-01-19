@@ -25,14 +25,14 @@ export default {
       dataCP: [
         {
           name: "first CP",
-          color: "blue",
+          color: "#42a5f5",
           data: {
             [new Date().toISOString().substr(0,10)]: this.$store.getters.getCp1Meting,
           },
         },
         {
           name: "second CP",
-          color: "lightblue",
+          color: "#0d47a1",
           data: {
             [new Date().toISOString().substr(0,10)]: this.$store.getters.getCp2Meting,
           },
@@ -41,7 +41,7 @@ export default {
       averageCP: [
         {
           name: "Average CP",
-          color: "green",
+          color: "#8bc34a",
           data: {
             [new Date().toISOString().substr(0,10)]: this.$store.getters.getAverageCP,
           },

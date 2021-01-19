@@ -27,6 +27,11 @@ import IntervalExplanation from "@/views/BreathingExercise/Interval/IntervalExpl
 import IntervalCountdown from "@/views/BreathingExercise/Interval/IntervalCountdown.vue";
 import IntervalRuntime from "@/views/BreathingExercise/Interval/IntervalRuntime.vue";
 
+import ButeykoExplanation from "@/views/BreathingExercise/Buteyko/ButeykoExplanation.vue";
+import MiddenrifspierExplanation from "@/views/BreathingExercise/Middenrifspier/MiddenrifspierExplanation.vue";
+import PapworthExplanation from "@/views/BreathingExercise/Papworth/PapworthExplanation.vue";
+import WimhofExplanation from "@/views/BreathingExercise/Wimhof/WimhofExplanation.vue";
+
 import AddMedication from "@/views/Medication/AddMedication.vue";
 import MedicationOverview from "@/views/Medication/MedicationOverview.vue";
 import MedicationDoing from "@/views/Medication/MedicationDoing.vue";
@@ -79,6 +84,11 @@ const routes = [
     { path: "/breathingexercise/list/interval", component: IntervalExplanation, beforeEnter: beforeEnterNotAuth },
     { path: "/breathingexercise/list/interval/countdown", component: IntervalCountdown, beforeEnter: beforeEnterNotAuth },
     { path: "/breathingexercise/list/interval/runtime", component: IntervalRuntime, beforeEnter: beforeEnterNotAuth },
+
+    { path: "/breathingexercise/list/buteyko", component: ButeykoExplanation, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/list/middenrifspier", component: MiddenrifspierExplanation, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/list/papworth", component: PapworthExplanation, beforeEnter: beforeEnterNotAuth },
+    { path: "/breathingexercise/list/wimhof", component: WimhofExplanation, beforeEnter: beforeEnterNotAuth },
     //CP Meting
     { path: "/breathingexercise/cpmeasurement", component: CpMeasurement, beforeEnter: beforeEnterNotAuth },
     { path: "/breathingexercise/cpmeasurement/CP1", component: CP1, beforeEnter: beforeEnterNotAuth },
