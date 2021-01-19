@@ -111,6 +111,7 @@ const actions = {
             dispatch('createMedicationUser');
             dispatch('setActionPlanFromDatabase');
             dispatch('setPeakFlow');
+            dispatch('getMedicijnTijden');
         }).catch(function (error) {
             reject(error);
             console.log(error.response);

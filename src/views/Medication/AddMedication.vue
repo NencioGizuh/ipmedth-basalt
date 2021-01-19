@@ -53,9 +53,9 @@ export default {
             this.$store.commit("currentMedicijn", medicijn.title);
         },
         fillData () { 
-            for (let k=0; k < this.medicijnen_tijden[0].length; k++){
-                this.filterValues.push(this.medicijnen_tijden[0][k].medication.name);
-                if(this.filterValues.includes(this.medicijnen_tijden[0][k].medication.name)){
+            for (let k=0; k < this.medicijnen_tijden.length; k++){
+                this.filterValues.push(this.medicijnen_tijden[k].medication.name);
+                if(this.filterValues.includes(this.medicijnen_tijden[k].medication.name)){
                     this.rmvDups.push(false);
                 } else {
                 this.rmvDups.push(true);

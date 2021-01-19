@@ -38,7 +38,6 @@
       height="221"
       type="list-item-three-line, card-avatar"
     ></v-skeleton-loader>
-    <v-container><v-btn fab small :style="{left: '50%', transform:'translateX(-50%)'}"><v-icon>mdi-plus</v-icon></v-btn></v-container>
   </div>
 </template>
 

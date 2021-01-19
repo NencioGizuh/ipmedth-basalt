@@ -7,13 +7,13 @@
         <v-container class="grey lighten-5">
             <h5 font-weight="500">Medicatie voor vandaag</h5>
             <!-- Medicijn V-card-->
-            <div v-for="(medicijn, key) in medicijnen_tijden[0]" :key="medicijn.id" v-show="rmvDups[key]">
+            <div v-for="(medicijn, key) in medicijnen_tijden" :key="medicijn.id" v-show="rmvDups[key]">
               <v-list-item>
                   <v-list-item two-line class="pa-0">
                       <v-list-item-content>
                         <h3> {{ medicijn.medication.name }}</h3>
                           <v-layout row>
-                            <div  v-for="med_tijd in medicijnen_tijden[0]" :key="med_tijd.id">
+                            <div  v-for="med_tijd in medicijnen_tijden" :key="med_tijd.id">
                               <v-list-item class="pr-0" style="flex:initial" v-show="medicijn.medication.name == med_tijd.medication.name">
                                   <v-chip :class="{'orange orange--text' : med_tijd.done}" label outlined > {{ med_tijd.time.substring(0,5) }}</v-chip>
                               </v-list-item>
@@ -79,12 +79,12 @@ export default {
     },
     fillData () { 
     let filterValues = [];
-      for (let k=0; k < this.medicijnen_tijden[0].length; k++){
-        if(filterValues.includes(this.medicijnen_tijden[0][k].medication.name)){
+      for (let k=0; k < this.medicijnen_tijden.length; k++){
+        if(filterValues.includes(this.medicijnen_tijden[k].medication.name)){
           this.rmvDups.push(false);
         } else {
           this.rmvDups.push(true);
-          filterValues.push(this.medicijnen_tijden[0][k].medication.name);
+          filterValues.push(this.medicijnen_tijden[k].medication.name);
         }
                           
       }
@@ -103,9 +103,9 @@ export default {
       for (i = 0; i < 6; i++){
         this.labels[i] = ((dag + i +"-" +maand ));
       }
-      for (let j = 0; j < this.medicijnen_tijden[0].length; j++){
+      for (let j = 0; j < this.medicijnen_tijden.length; j++){
         this.datasets.push( {
-          label: this.medicijnen_tijden[0][j].medication.name,
+          label: this.medicijnen_tijden[j].medication.name,
           backgroundColor: this.datachart_colors[j],
           data: [1]
         

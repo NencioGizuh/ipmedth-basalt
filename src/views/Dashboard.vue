@@ -18,11 +18,14 @@
             </v-col>
             <v-col>
                 <v-card class="h-100">
-                    <v-card-text class="h-100 d-flex flex-column">
-                        <p class="">Je volgende medicijnen moet je nemen om:</p>
+                    <v-card-text v-if="loadingTime" class="h-100 d-flex flex-column">
+                        <p>Je volgende medicijnen moet je nemen om:</p>
                         <div class="d-flex justify-center align-center flex-grow-1">
-                            <p class="mb-0 medicine-time">XX:XX</p>
+                            <p class="mb-0 medicine-time">{{time}}</p>
                         </div>
+                    </v-card-text>
+                    <v-card-text v-else>
+                        <p>Er zijn geen medicijnen geregistreerd.</p>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -42,11 +45,14 @@
 <script>
 import AirqualityOverview from '../components/Airquality/AirqualityOverview.vue'
 import PeakFlowMeasurementCircle from '../components/PeakFlow/PeakFlowMeasurementCircle.vue';
+import moment from 'moment';
 
 export default {
     name: "Dashboard",
     data() {
         return {
+            loadingTime: true,
+            time: null
         };
     },
     components: {
@@ -55,6 +61,42 @@ export default {
     },
     created() {
         this.$store.dispatch("setDefaultAppbar");
+        this.getMedicationTimeUser();
+    },
+    watch: {
+        medicijnen_tijden() {
+            this.getMedicationTimeUser();
+        }
+    },
+    methods: {
+        getMedicationTimeUser() {
+            const medicijnen = this.$store.getters.medicijnen_tijden;
+
+            if(medicijnen.length === 0) {
+                this.loadingTime = false;
+                return null;
+            }
+
+            const times = [];
+
+            for(let i=0; i<medicijnen.length; i++) {
+                times.push(medicijnen[i].time);
+            }
+
+            times.sort((a,b) => {
+                return (a < b) ? 1 : ((a > b) ? -1 : 0);
+            });
+
+            const now = moment(new Date()).locale('nl').format('HH:mm:ss');
+
+            for(let i=0; i<times.length; i++) {
+                if (times[i] > now) {
+                    this.time = times[i].substring(0, 5);
+                }
+            }
+
+            this.loadingTime = true;
+        }
     },
     computed: {
         loadingPeakFlow() {
@@ -62,6 +104,9 @@ export default {
         },
         getPeakFlow() {
             return this.$store.getters.getPeakFlow;
+        },
+        medicijnen_tijden(){
+            return this.$store.getters.medicijnen_tijden;
         },
     }
 };
