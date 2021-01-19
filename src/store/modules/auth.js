@@ -168,6 +168,8 @@ const actions = {
             commit("setUser", null);
             commit("setNotifications", null);
             commit("setTriggers", null);
+            commit("setMedicationTimes", null);
+            commit("setMedication", null);
             commit("setToken", null);
             localStorage.removeItem("token");
             router.push("/login");
