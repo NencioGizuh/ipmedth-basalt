@@ -100,7 +100,7 @@ export default {
                     "Authorization": "Bearer " + localStorage.getItem("token"),
                 } 
             }).then(() => {
-                this.$router.push("/account");
+                this.$router.push({path: "/account", query: {password: 'succes'}});
             }).catch(() => {
                 this.loading = false;
                 this.errorMessages = "Verkeerd wachtwoord";

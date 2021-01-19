@@ -92,6 +92,7 @@ export default {
                 heightRules: [
                     (v) => !!v || "Lengte is vereist",
                     (v) => /\d/.test(v) || "Lengte bestaat uit cijfers",
+                    (v) => /^\d{3}$/.test(v) || "Lengte kan maar uit drie cijfers bestaan",
                 ],
             },
             errorMessages: {

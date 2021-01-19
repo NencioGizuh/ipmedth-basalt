@@ -155,7 +155,7 @@ const actions = {
                 hyperventilation: res.data.hyperventilation,
                 pollen: res.data.pollen, 
             });
-            router.push("/account");
+            router.push({path: "/account", query: {triggers: 'succes'}});
         });
     },
     logout({commit}) {
@@ -189,7 +189,7 @@ const actions = {
                     age: res.data.age,
                     height: res.data.height,
                 });
-                router.push("/account");
+                router.push({path: "/account", query: {personal: 'succes'}});
                 resolve(res.data);
             }).catch(err => {
                 reject(err.response.data);

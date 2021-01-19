@@ -32,6 +32,24 @@
             <v-icon left>mdi-logout</v-icon>
             Uitloggen
         </v-btn>
+
+        <v-snackbar
+            v-model="snackbar"
+            :timeout="2000"
+        >
+            {{snackbarText}}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="primary"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                >
+                    Sluit
+                </v-btn>
+            </template>
+        </v-snackbar>
     </div>
 </template>
 
@@ -41,7 +59,30 @@ export default {
     data() {
         return {
             loading: false,
+            snackbarText: null,
+            snackbar: false,
         }
+    },
+    created() {
+        setTimeout(() => {
+            if (this.$route.query.personal === "succes") {
+                this.$router.replace('/account');
+                this.snackbarText = "Jouw persoonlijke gegevens zijn succesvol gewijzigd."
+                this.snackbar = true;
+            } else if (this.$route.query.password === "succes") {
+                this.$router.replace('/account');
+                this.snackbarText = "Jouw wachtwoord is succesvol gewijzigd."
+                this.snackbar = true;
+            } else if (this.$route.query.notifications === "succes") {
+                this.$router.replace('/account');
+                this.snackbarText = "Jouw meldingen zijn succesvol gewijzigd."
+                this.snackbar = true;
+            } else if (this.$route.query.triggers === "succes") {
+                this.$router.replace('/account');
+                this.snackbarText = "Jouw triggers zijn succesvol gewijzigd."
+                this.snackbar = true;
+            }
+        }, 200);
     },
     beforeRouteEnter (to, from, next) {
         next(vm => {
