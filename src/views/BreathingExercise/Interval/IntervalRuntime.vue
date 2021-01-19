@@ -23,8 +23,6 @@ export default {
       date: new Date().toISOString().substr(0, 10),
       timerCount: 60,
       timeout: null,
-      test1: "", 
-      takenCounter: "",
       intervalCompleted: this.$store.getters.getIntervalCompleted
     };
   },
@@ -55,13 +53,13 @@ export default {
         this.$store.dispatch("addMeting", data);
         this.$router.push({ path: "/breathingexercise" });
       }.bind(this),
-      2000
+      60000
     );
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.$store.dispatch("setAppbarDetails", {
-        appbarText: "Interval",
+        appbarText: "Interval oefening",
         appbarCloseRoute: "/breathingexercise",
       });
     });
