@@ -81,6 +81,23 @@
             indeterminate
             color="accent"
         />
+        <v-snackbar
+            v-model="snackbar"
+            :timeout="2000"
+        >
+            {{snackbarText}}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="primary"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                >
+                    Sluit
+                </v-btn>
+            </template>
+        </v-snackbar>
     </div>
 </template>
 
@@ -93,6 +110,8 @@ export default {
     data() {
         return {
             showMeasurements: 4,
+            snackbarText: "",
+            snackbar: false,
         }
     },
     components: {
@@ -101,6 +120,22 @@ export default {
     },
     created() {
         this.$store.dispatch('setDefaultAppbar');
+
+        setTimeout(() => {
+            if (this.$route.query.add === "succes") {
+                this.$router.replace('/peakflow');
+                this.snackbarText = "De peak flow meting is succesvol toegevoegd."
+                this.snackbar = true;
+            } else if (this.$route.query.delete === "succes") {
+                this.$router.replace('/peakflow');
+                this.snackbarText = "De peak flow meting is succesvol verwijderd."
+                this.snackbar = true;
+            } else if (this.$route.query.share === "succes") {
+                this.$router.replace('/peakflow');
+                this.snackbarText = "De peak flow meting is succesvol gedeeld met jouw zorgverlener(s)."
+                this.snackbar = true;
+            }
+        }, 200);
     },
     computed: {
         getPeakFlow() {
@@ -122,7 +157,7 @@ export default {
         },
         getDaysAgo(date) {
             const today = new Date();
-            return today.getDay() - new Date(date).getDay();
+            return Math.floor((Date.parse(today) - Date.parse(date)) / 86400000);
         },
         getZone(value) {
             if (value > this.$store.getters.getPeakFlowZoneGreen) {

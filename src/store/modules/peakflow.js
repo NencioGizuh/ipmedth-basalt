@@ -88,7 +88,7 @@ const actions = {
         }).then(res => {
             commit("addPeakFlow", res.data);
             commit('orderPeakFlow');
-            router.push("/peakflow");
+            router.push({path: "/peakflow", query: {add: 'succes'}});
         })
     },
     deletePeakFlow({commit}, id) {
@@ -99,7 +99,7 @@ const actions = {
         }).then(() => {
             commit("deletePeakFlow", id);
             commit('orderPeakFlow');
-            router.push("/peakflow");
+            router.push({path: "/peakflow", query: {delete: 'succes'}});
         })
     },
     setPeakFlowById({ commit, state }, id) {
@@ -139,7 +139,7 @@ const actions = {
             } 
         }).then(res => {
             commit("setActionPlan", res.data);
-            router.push("/actionplan");
+            router.push({path: "/actionplan", query: {reset: 'succes'}});
         })
     },
 };

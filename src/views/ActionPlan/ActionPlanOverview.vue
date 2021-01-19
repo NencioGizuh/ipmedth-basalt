@@ -243,6 +243,24 @@
             indeterminate
             color="accent"
         />
+
+        <v-snackbar
+            v-model="snackbar"
+            :timeout="2000"
+        >
+            Jouw actieplan is succesvol gewijzigd.
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="primary"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                >
+                    Sluit
+                </v-btn>
+            </template>
+        </v-snackbar>
     </div>
 </template>
 
@@ -255,10 +273,19 @@ export default {
             dialogZoneYellow: false,
             dialogZoneOrange: false,
             dialogZoneRed: false,
+            snackbar: false,
         }
     },
     created() {
         this.$store.dispatch('setDefaultAppbar');
+
+        setTimeout(() => {
+            if (this.$route.query.reset === "succes") {
+                this.$router.replace('/actionplan');
+                this.snackbar = true;
+            }
+        }, 200);
+        
     },
     computed: {
         getPeakFlowZoneGreen() {

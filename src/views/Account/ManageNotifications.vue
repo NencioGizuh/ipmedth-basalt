@@ -71,8 +71,10 @@ export default {
 
             localStorage.setItem("notifications", JSON.stringify(data));
             this.$store.commit("setNotifications", data);
-            
-            this.$router.push("/account");
+
+            setTimeout(() => {
+                this.$router.push({path: "/account", query: {notifications: 'succes'}});
+            }, 500);
         }
     },
     computed: {
