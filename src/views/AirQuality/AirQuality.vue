@@ -333,15 +333,15 @@ export default {
           this.airQualityPerHour = "Goed";
           break;
         case 4:
-          this.color = "#FFFECE";
+          this.color = "#ffda40";
           this.airQualityPerHour = "Matig";
           break;
         case 5:
-          this.color = "#FFFF95";
+          this.color = "#ffda40";
           this.airQualityPerHour = "Matig";
           break;
         case 6:
-          this.color = "#FEFF00";
+          this.color = "#ffda40";
           this.airQualityPerHour = "Matig";
           break;
         case 7:

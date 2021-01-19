@@ -16,7 +16,7 @@
               v-model="login.email"
         ></v-text-field>
         <v-text-field
-              label="Password"
+              label="Wachtwoord"
               placeholder="Wachtwoord"
               type="password"
               required 

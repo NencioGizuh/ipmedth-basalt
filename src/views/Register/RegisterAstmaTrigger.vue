@@ -401,8 +401,9 @@
       <div v-if="!medicatieGebruik">
         <h1>Medicatiegebruik</h1>
         <p>Check altijd voor het invullen met je longverpleegkundige</p>
+        <p>Vul minstens één luchtwegverwijder, luchtwegbeschermer en neusspray in</p>
         <v-expansion-panels>
-          <v-expansion-panel>
+          <v-expansion-panel class="mb-2">
             <v-expansion-panel-header>
               Luchtwegverwijder(s)
             </v-expansion-panel-header>
@@ -448,7 +449,7 @@
         </v-expansion-panels>
 
         <v-expansion-panels>
-          <v-expansion-panel>
+          <v-expansion-panel class="mb-2">
             <v-expansion-panel-header>
               Luchtwegbeschermer(s)
             </v-expansion-panel-header>
@@ -458,11 +459,6 @@
               :label="medicijn.name | capitalize"
               :value="medicijn.name.toLowerCase().trim()">
               </v-checkbox>
-              <v-checkbox
-                v-model="medicijnen.luchtwegbeschermers"
-                label="geen"
-                value="geen"
-              ></v-checkbox>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -647,6 +643,7 @@ export default {
       medicijnenOK: false,
       reminder: false,
       valid: true,
+      validGeel: true,
       reminderOK: {
         luchtwegverwijders: false,
         luchtwegbeschermers: false,
@@ -746,6 +743,7 @@ export default {
       zone: "groen",
       triggersMultiple: {
         rook: [],
+        huisdieren: [],
         luchtverontreiging: [],
         weersomstandigheden: [],
         pollen: []
@@ -943,9 +941,11 @@ export default {
       }
     },
     getMedicineInformation() {
+      return new Promise((resolve, reject) => {
       var vm = this;
       axios.get("http://localhost:8000/api/getmedication")
         .then(function (response) {
+          resolve(response);
           var array = response.data;
           for (let index = 0; index < array.length; index++) {
             const element = array[index];
@@ -976,8 +976,9 @@ export default {
           }
         })
         .catch(function (error) {
-          console.log(error);
+          reject(error);
         })
+      });
     },
     getInhalatorInformation() {
       return new Promise((resolve, reject) => {
@@ -1015,6 +1016,7 @@ export default {
       })
     },
     getChosenMedication() {
+      return new Promise((resolve, reject) => {
         var vm = this;
         var string = this.inhalatorSelected.join();
         console.log(string);
@@ -1023,6 +1025,7 @@ export default {
                 values: string
             }
         }).then(function (response) {
+            resolve(response);
             let array = response.data;
             for (let index = 0; index < array.length; index++) {
               const element = array[index];
@@ -1127,8 +1130,9 @@ export default {
               }
             }
         }).catch(function (error) {
-            console.log(error);
+            reject(error);
         })
+      });
     },
     switchZone() {
       var vm = this;
@@ -1144,23 +1148,30 @@ export default {
           this.zone = "oranje";
           this.groeneZone = true;
           this.geleZone = false;
+          this.$refs.form.reset();
           break;
         case "oranje":
           this.zone = "rood";
           this.geleZone = true;
           this.oranjeZone = false;
+          this.$refs.form.reset();
           break;
         case "rood":
           this.zone = "medicatiegebruik";
           this.oranjeZone = true;
           this.rodeZone = false;
+          this.$refs.form.reset();
           break;
         case "medicatiegebruik":
           this.zone = "medicijngebruik"
-          this.rodeZone = true;
-          this.medicatieGebruik = false;
-          this.e1 = 3;
-          this.getMedicineInformation();
+          this.getMedicineInformation().then(function () {
+              vm.rodeZone = true;
+              vm.medicatieGebruik = false;
+              vm.e1 = 3;
+          })
+          .catch(function () {
+            console.log("Er is iets fout met de API")
+          })
           this.$store.commit("saveActionPlan", this.actieplan);
           break;
         case "medicijngebruik": 
@@ -1180,9 +1191,13 @@ export default {
           vm.e1 = 4;
           break;
         case 'reminderMedicijn':
-          vm.getChosenMedication();
-          vm.reminderInstellen = true;
-          vm.reminderMedicijn = false;
+          vm.getChosenMedication().then(function () {
+              vm.reminderInstellen = true;
+              vm.reminderMedicijn = false;
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
           break;
       }
     },
@@ -1319,7 +1334,6 @@ export default {
   },
   watch: {
     inhalatorSelectedInformation: {
-      //Deep = true moet er in verwerkt worden
       handler: function () {
       var vm = this;
       let luchtwegverwijders = vm.inhalatorSelectedInformation.luchtwegverwijders;
@@ -1385,7 +1399,7 @@ export default {
     },
     inhalatorSelected: function() {
       var vm = this;
-      if(vm.inhalatorSelected.length === 3) {
+      if(vm.inhalatorSelected.length >= 3) {
         vm.medicineSelected = true;
       }
       else {
