@@ -1148,19 +1148,19 @@ export default {
           this.zone = "oranje";
           this.groeneZone = true;
           this.geleZone = false;
-          this.$refs.form.reset();
+          this.$refs.form.resetValidation()
           break;
         case "oranje":
           this.zone = "rood";
           this.geleZone = true;
           this.oranjeZone = false;
-          this.$refs.form.reset();
+          this.$refs.form.resetValidation()
           break;
         case "rood":
           this.zone = "medicatiegebruik";
           this.oranjeZone = true;
           this.rodeZone = false;
-          this.$refs.form.reset();
+          this.$refs.form.resetValidation()
           break;
         case "medicatiegebruik":
           this.zone = "medicijngebruik"
