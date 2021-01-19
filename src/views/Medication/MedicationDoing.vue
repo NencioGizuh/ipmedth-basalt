@@ -4,19 +4,19 @@
       <v-container class="grey lighten-5 mb-6">
         <h3 align="center">
           Wat zijn uw gewenste tijden en/of dosage voor
-          <b>{{ current_medicijn.title }}</b> ?
+          <b>{{ current_selected_medicijn.title }}</b>?
         </h3>
         <v-alert v-show="medicatieOpgeslagen" dense text align="center" type="success" >Uw medicatie is opgeslagen</v-alert>
         <v-row class="mt-5">
             <v-col cols="6" sm="6" md="6">
-              <h5>Dosage (in mg)</h5>
-              <v-text-field v-model="form.dosage" label="Hoeveelheid" required :rules="[v => !!v || 'Alles invullen aub']" ></v-text-field>
+              <h5>Aantal keer</h5>
+              <v-text-field v-model="form.dosage" label="Hoeveelheid" required :rules="[v => !!v || 'Alles invullen aub']"></v-text-field>
             </v-col>
             <v-col cols="3" sm="3" md="3">
               <h5>Tijd</h5>
               <v-row no-gutters>
                 <v-col>
-                  <v-select v-model="uur" :items="items_uren" :rules="[v => !!v || 'Alles invullen aub']" label="Uur"></v-select>
+                  <v-text-field v-model="uur" label="Uur" :rules="[v => !!v || 'Alles invullen aub']"></v-text-field>
                 </v-col>
               </v-row>
             </v-col>
@@ -24,7 +24,7 @@
               <h5 class="pt-5"></h5>
               <v-row  no-gutters>
                 <v-col>
-                  <v-select v-model="minuut" :items="items_minuten" :rules="[v => !!v || 'Alles invullen aub']" label="Min."></v-select>
+                  <v-text-field v-model="minuut" label="Min." :rules="[v => !!v || 'Alles invullen aub']"></v-text-field>
                 </v-col>
               </v-row>
             </v-col>
@@ -36,7 +36,7 @@
     </v-form>
 
     <v-container v-show="medicatieOpgeslagen" class="grey lighten-5 mb-6" justify="center" align="center">
-      <h3 align="center">Wilt u hulp bij het gebruik van <br/>{{ current_medicijn.title }}?</h3>
+      <h3 align="center">Wilt u hulp bij het gebruik van <br/>{{ current_selected_medicijn.title }}?</h3>
       <v-row align="center" no-gutters style="height: 150px">
         <v-col>
           <v-card to="/medication/help" class="pa-2 ma-1" align="center" outlined tile> Ja </v-card>
@@ -50,12 +50,11 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       medicatieOpgeslagen: false,
-      items_uren: ["08", "09", "10", "11"],
-      items_minuten: ["00", "15", "30", "45"],
       valid: true,
       uur: null,
       minuut: null,
@@ -71,23 +70,30 @@ export default {
     medicijnen_tijden() {
       return this.$store.getters.medicijnen_tijden;
     },
-    current_medicijn() {
-      return this.$store.getters.current_medicijn;
+    current_selected_medicijn() {
+      return this.$store.getters.current_selected_medicijn;
+    },
+    slcMedicijn(){
+      return this.$store.getters.slcMedicijn;
     }
   },
   methods: {
-    formValues (){
-      this.form.title = this.medicijnen_tijden[this.medicijnen_tijden.length - 1].title;
-      this.form.tijd = this.uur + ":" + this.minuut;
-      this.$store.commit("saveMedicijn", this.form);
-      this.medicatieOpgeslagen = true;
-    },
     validate () {
       this.$refs.form.validate();
       if (this.$refs.form.validate()){
         this.formValues();
       }
     },
+    formValues(){
+      this.form.title = this.current_selected_medicijn.title;
+      this.form.tijd = this.uur + ":" + this.minuut;
+      this.medicatieOpgeslagen = true;
+      this.getSelectedMedicijn();
+    },
+    getSelectedMedicijn(){
+      this.$store.dispatch("getSelectedMedicijn", this.form);
+    },
+
     beforeRouteEnter(to, from, next) {
       next((vm) => {
         vm.$store.dispatch("setAppbarDetails", {

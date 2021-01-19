@@ -1,24 +1,28 @@
 <template>
     <div> 
-        <v-btn outlined block color="primary" to="/medication/add">
+        <v-btn outlined block color="primary" to="/medication/add" >
             <v-icon left>mdi-plus</v-icon>
             Medicatie innemen
         </v-btn>
         <v-container class="grey lighten-5">
-            <h5 font-weight="500">Medicatie vandaag te nemen</h5>
+            <h5 font-weight="500">Medicatie voor vandaag</h5>
             <!-- Medicijn V-card-->
-            <v-list-item v-for="medicijn in medicijnen_category" :key="medicijn.id"> 
-                <v-list-item two-line class="pa-0"> 
-                    <v-list-item-content>
-                       <h3> {{ medicijn.title }} </h3>
-                        <v-layout row>
-                            <v-list-item class="pr-0" style="flex:initial" v-for="medicijnen_tijden in medicijnen_tijden" :key="medicijnen_tijden.id">
-                                <v-chip :class="{'orange orange--text' : medicijnen_tijden.done}" label outlined> {{ medicijnen_tijden.tijd }}</v-chip>
-                            </v-list-item>
-                            </v-layout>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list-item> 
+            <div v-for="(medicijn, key) in medicijnen_tijden[0]" :key="medicijn.id" v-show="rmvDups[key]">
+              <v-list-item>
+                  <v-list-item two-line class="pa-0">
+                      <v-list-item-content>
+                        <h3> {{ medicijn.medication.name }}</h3>
+                          <v-layout row>
+                            <div  v-for="med_tijd in medicijnen_tijden[0]" :key="med_tijd.id">
+                              <v-list-item class="pr-0" style="flex:initial" v-show="medicijn.medication.name == med_tijd.medication.name">
+                                  <v-chip :class="{'orange orange--text' : med_tijd.done}" label outlined > {{ med_tijd.time.substring(0,5) }}</v-chip>
+                              </v-list-item>
+                            </div>  
+                              </v-layout>
+                      </v-list-item-content>
+                  </v-list-item>
+              </v-list-item> 
+            </div>
         </v-container>
         
         <v-container class="grey lighten-5 mt-3">
@@ -35,6 +39,8 @@ export default {
   data() {
     return {
       labels: [],
+      rmvDups: [],
+      //loadingMedicatie: false,
       datacollection: null,
       datasets: [],
       ChartConfig: {
@@ -46,7 +52,14 @@ export default {
     };
   },
   mounted() {
+    this.getData();
     this.fillData();
+  },
+  watch: {
+    medicijnen_tijden () {
+      this.fillData();
+      //this.loadingMedicatie = true;
+    }
   },
   computed:{
     medicijn(){
@@ -55,24 +68,32 @@ export default {
     medicijnen_tijden(){
       return this.$store.getters.medicijnen_tijden;
     },
-    datacollection_label(){
-      return this.$store.getters.datacollection_label;
-    },
-    datacollection_datasets(){
-      return this.$store.getters.datacollection_label_datasets;
-    },
     medicijnen_category(){
       return this.$store.getters.medicijn_categorieen;
     },
   },
   methods:{
-    fillData () {
+    getData(){
+      this.$store.dispatch('getMedicijnTijden', 1 ).then(() => {
+      });
+    },
+    fillData () { 
+    let filterValues = [];
+      for (let k=0; k < this.medicijnen_tijden[0].length; k++){
+        if(filterValues.includes(this.medicijnen_tijden[0][k].medication.name)){
+          this.rmvDups.push(false);
+        } else {
+          this.rmvDups.push(true);
+          filterValues.push(this.medicijnen_tijden[0][k].medication.name);
+        }
+                          
+      }
+
       this.fillChartData();
       this.datacollection = {
         labels: this.labels,
         datasets: this.datasets
       }
-      return this.datacollection; 
     },
     fillChartData(){
       const datum = new Date();
@@ -82,11 +103,11 @@ export default {
       for (i = 0; i < 6; i++){
         this.labels[i] = ((dag + i +"-" +maand ));
       }
-      for (let j = 0; j < this.medicijnen_tijden.length; j++){
+      for (let j = 0; j < this.medicijnen_tijden[0].length; j++){
         this.datasets.push( {
-          label: this.medicijnen_tijden[j].title,
+          label: this.medicijnen_tijden[0][j].medication.name,
           backgroundColor: this.datachart_colors[j],
-          data: [this.medicijnen_tijden[j].dosage]
+          data: [1]
         
         },)
       }

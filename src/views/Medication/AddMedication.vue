@@ -1,14 +1,14 @@
 <template>
   <div>
       <h3>Welk medicijn wilt u gebruiken?</h3>
-       <v-container class="grey lighten-5" v-for="category in medicijn_categorieen" :key="category.id" >
-            <h5 font-weight="500">{{category.title}}</h5>
+       <v-container class="grey lighten-5" v-for="(category, key) in medicijnenInDB" :key="category.id" v-show="rmvDups[key]" >
+            <h5 font-weight="500">{{category.type}}</h5>
             <v-row>
-                <v-col v-show="category.title != medicijn.category" v-for="medicijn in medicijnen" :key="medicijn.id" class=" child-flex" cols="6" @click="currentMedicijn(medicijn)" >
+                <v-col v-show="category.title != medicijn.category" v-for="(medicijn) in medicijnen" :key="medicijn.id" class=" child-flex" cols="6" @click="currentMedicijn(medicijn)" >
                     <router-link to="/medication/doing">
-                        <v-img contain to="/medication/doing" :src="images[ medicijn['title'] ]"  aspect-ratio="1" class="grey lighten-2"></v-img>
+                        <v-img contain to="/medication/doing" :src="images[medicijn.title]" aspect-ratio="1" class="grey lighten-2"></v-img>
                     </router-link>
-                    <h4 class="text-center">{{ medicijn["title"] }} </h4> 
+                    <h4 class="text-center">{{ medicijn.title }} </h4> 
                 </v-col>
             </v-row>
         </v-container>
@@ -26,26 +26,42 @@ export default {
     data() {
         return {
             medicijn: null,
+            rmvDups: [true],
+            filterValues: [],
             images: {
-                "Autohaler" : Autohaler,
-                "Avamys neusspray" : Avamys_neusspray,
-                "Onbrez Breezhaler" : Onbrez_Breezhaler,
-                "Qvar autohaler" : Qvar_autohaler,
+                "Salbutamol" : Autohaler,
+                "Terbutaline" : Avamys_neusspray,
+                "Ipratropium" : Onbrez_Breezhaler,
+                "Formoterol" : Qvar_autohaler,
             }
         }
+    },
+    created(){
+        this.$store.dispatch("getRegisteredMedicijnen");
     },
     computed: {
         medicijnen(){
             return this.$store.getters.medicijnen;
-        }, 
-        medicijn_categorieen(){
-            return this.$store.getters.medicijn_categorieen;
+        },
+        medicijnenInDB(){
+            return this.$store.getters.medicijnenInDB;
         },
     }, 
     methods:{
         currentMedicijn (medicijn){
+            console.log(this.$store.getters.medicijnen);
             this.$store.commit("currentMedicijn", medicijn.title);
-        }
+        },
+        fillData () { 
+            for (let k=0; k < this.medicijnen_tijden[0].length; k++){
+                this.filterValues.push(this.medicijnen_tijden[0][k].medication.name);
+                if(this.filterValues.includes(this.medicijnen_tijden[0][k].medication.name)){
+                    this.rmvDups.push(false);
+                } else {
+                this.rmvDups.push(true);
+                }
+            }
+        },   
     },
       beforeRouteEnter (to, from, next) {
     next(vm => {

@@ -1,90 +1,48 @@
 import axios from "axios";
+//import router from "@/router/index";
+
 const state = {
+    slcMedicijn: null,
+    medicijnenInDB: [],
     medicijnen: [
         {
             id: 1,
-            title: "Autohaler",
-            link: "/medication/doing",
+            title: "Salbutamol",
             category: "Luchtwegverwijder"
         },
         {
             id: 2,
-            title: "Onbrez Breezhaler",
-            link: "/medication/doing",
+            title: "Terbutaline",
             category: "Luchtwegverwijder"
         },
         {
             id: 3,
-            title: "Qvar autohaler",
-            link: "/medication/doing",
+            title: "Ipratropium",
             category: "Luchtbeschermer"
         },
-        {
-            id: 4,
-            title: "Avamys neusspray",
-            link: "/medication/doing",
-            category: "Luchtbeschermer"
-        }
     ],
-    medicijnen_tijden: [
-        {
-            id: 1,
-            title: "Autohaler",
-            done: true,
-            tijd: "08:00",
-            dosage: 150,
-        },
-        {
-            id: 2,
-            title: "Onbrez Breezhaler",
-            done: false,
-            tijd: "12:30",
-            dosage: 200,
-        },
-    ],
-    medicijn_categorieen: [
-        {
-            id: 1,
-            title: "Luchtwegverwijder",
-          },
-          {
-            id: 2,
-            title: "Luchtbeschermer",
-          }
-    ],
-    datacollection_label: [
-         "21", "22", "23", "24", "25", "26", "27"
-    ],
-    datacollection_label_datasets: [
-        {
-            label: 'Salbutamol',
-            backgroundColor: '#008ACC',
-            data: [150 ]
-        }, {
-            label: 'Medicijn 2',
-            backgroundColor: '#005BA9',
-            data: [200]
-        },
-        {
-            label: 'Medicijn 3',
-            backgroundColor: '#00305D',
-            data: [250]
-        }
-    ],
+    medicijnen_tijden: [],
     current_selected_medicijn: {
         title: null
     }
 }
 
 const mutations = {
-    saveMedicijnen: (state, payload) => {
-        state.medicijnen = payload;
+    slcMedicijn: (state, payload) => {
+        state.slcMedicijn = payload; 
     },
     saveMedicijn: (state, payload) => {
         state.medicijnen_tijden.push(payload) 
     },
     currentMedicijn: (state, payload) => {
         state.current_selected_medicijn.title = payload;
+    },
+    setMedicationTimes: (state, payload) => {
+        state.medicijnen_tijden.push(payload);
+    },
+    setMedication: (state, payload) => {
+        state.medicijnenInDB = payload;
+
     }
 };
 
@@ -98,10 +56,58 @@ const actions = {
             }
         }).then(function (response) {
             commit('saveMedicijnen', response.data);
+            
         }).catch(function (error) {
             console.log(error);
         })
-    }
+    },
+
+    getSelectedMedicijn({commit, dispatch}, data) {
+        axios.get('http://localhost:8000/api/getmedication', {
+        }).then(function (response) {
+            let data_medicatie_id = response.data.filter(i => i.name == data.title);
+            commit("slcMedicijn", data_medicatie_id[0].id);
+            const data_medications_user = {
+              time: data.tijd,
+              medicine_id: data_medicatie_id[0].id,
+            }
+            dispatch("postMedicationUsers", data_medications_user);
+        })
+    },
+
+    postMedicationUsers({ commit }, data_medications_user) {
+        axios.post('http://localhost:8000/api/createmedicationsuser', data_medications_user, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            }
+        }).then(function () {
+            commit("slcMedicijn", null);
+        }).catch(function (error) {
+            console.log(error);
+        })
+    },
+
+    getMedicijnTijden({commit}) {
+        axios.get('http://localhost:8000/api/getmedicationsuser', {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            }
+        }).then(function (response) {
+            //let data_medicatie_user_id = response.data.filter(i => i.user_id == data);
+            commit("setMedicationTimes", response.data);
+        }).catch(function (error) {
+            console.log(error);
+        })
+        return 
+    },
+
+    getRegisteredMedicijnen({commit}) {
+        axios.get('http://localhost:8000/api/getmedication', {
+        }).then(function (response) {
+            console.log(response);
+            commit("setMedication", response.data);
+        })
+    },
 };
 
 const getters = {
@@ -114,14 +120,17 @@ const getters = {
     medicijnen(state) {
         return state.medicijnen;
     },
-    medicijn_categorieen(state) {
-        return state.medicijn_categorieen;
-    },
     medicijnen_tijden(state) {
         return state.medicijnen_tijden;
     },
-    current_medicijn(state) {
+    current_selected_medicijn(state) {
         return state.current_selected_medicijn;
+    },
+    slcMedicijn(state){
+        return state.slcMedicijn;
+    },
+    medicijnenInDB(state){
+        return state.medicijnenInDB;
     }
 
 };
