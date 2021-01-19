@@ -126,6 +126,10 @@ export default {
                 this.$router.replace('/peakflow');
                 this.snackbarText = "De peak flow meting is succesvol toegevoegd."
                 this.snackbar = true;
+            } else if (this.$route.query.delete === "succes") {
+                this.$router.replace('/peakflow');
+                this.snackbarText = "De peak flow meting is succesvol verwijderd."
+                this.snackbar = true;
             } else if (this.$route.query.share === "succes") {
                 this.$router.replace('/peakflow');
                 this.snackbarText = "De peak flow meting is succesvol gedeeld met jouw zorgverlener(s)."

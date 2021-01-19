@@ -99,7 +99,7 @@ const actions = {
         }).then(() => {
             commit("deletePeakFlow", id);
             commit('orderPeakFlow');
-            router.push("/peakflow");
+            router.push({path: "/peakflow", query: {delete: 'succes'}});
         })
     },
     setPeakFlowById({ commit, state }, id) {
