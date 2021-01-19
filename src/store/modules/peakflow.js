@@ -139,7 +139,7 @@ const actions = {
             } 
         }).then(res => {
             commit("setActionPlan", res.data);
-            router.push("/actionplan");
+            router.push({path: "/actionplan", query: {reset: 'succes'}});
         })
     },
 };

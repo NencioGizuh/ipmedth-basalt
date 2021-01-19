@@ -1,22 +1,24 @@
 <template>
     <div>
-        <v-form @submit="submitForm" autocomplete="off">
+        <v-form ref="form" @submit="submitForm" autocomplete="off">
             <v-card>
                 <v-card-text>
                     <p class="font-weight-bold body-2">Groen zone</p>
-                    <p class="mb-1">De peak flow is boven de ... <u>voor</u> medicatie:</p>
+                    <p class="mb-1">De peak flow is boven de ... <b>voor</b> medicatie.</p>
                     <v-text-field
                         v-model="zoneGreenPeakFlowBeforeMedicines"
                         outlined 
                         dense
+                        :rules="rules.peakflow"
                         type="number"
                         suffix="l/min"
                     />
-                    <p class="mb-1">De peak flow is boven de ... <u>na</u> medicatie:</p>
+                    <p class="mb-1">De peak flow is boven de ... <b>na</b> medicatie.</p>
                     <v-text-field
                         v-model="zoneGreenPeakFlowAfterMedicines"
                         outlined 
                         dense
+                        :rules="rules.peakflow"
                         type="number"
                         suffix="l/min"
                     />
@@ -38,6 +40,7 @@
                         v-model="zoneYellowPeakFlowBelow"
                         outlined 
                         dense
+                        :rules="rules.peakflow"
                         type="number"
                         suffix="l/min"
                     />
@@ -46,6 +49,7 @@
                         v-model="zoneYellowPeakFlowAbove"
                         outlined 
                         dense
+                        :rules="rules.peakflow"
                         type="number"
                         suffix="l/min"
                     />
@@ -102,6 +106,7 @@
                         v-model="zoneRedPeakFlow"
                         outlined 
                         dense
+                        :rules="rules.peakflow"
                         type="number"
                         suffix="l/min"
                     />
@@ -155,13 +160,20 @@ export default {
             zoneRedPeakFlow: null,
             zoneRedMedicines: null,
             zoneRedExplanation: null,
-            medicines: [ // TODO: Change to real medicines
-                'Medicine 1',
-                'Medicine 2',
-                'Medicine 3',
-                'Medicine 4',
+            medicines: [
+                'Salbutamol',
+                'Ipratropium',
+                'Terbutaline',
             ],
+            rules: {
+                peakflow: [
+                    (v) => !!v || "Peakflow is vereist",
+                    (v) => /\d/.test(v) || "Peakflow bestaat uit getallen",
+                    (v) => /^\d{3}$/.test(v) || "Peakflow kan maar uit drie getallen bestaan",
+                ],
+            },
             loading: false,
+            snackbar: false,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -174,6 +186,7 @@ export default {
     },
     created() {
         this.setActionPlanFromVuex();
+        this.getMedicinesUser();
     },
     methods: {
         setActionPlanFromVuex() {
@@ -181,8 +194,19 @@ export default {
                 this[prop] = this.getActionPlan[prop];
             }
         },
+        getMedicinesUser() {
+            const medicijnen = this.$store.getters.medicijnen_tijden;
+            const medicijnenUser = []
+            for(let i=0; i<medicijnen.length; i++) {
+                medicijnenUser.push(medicijnen[i].medication.name)
+            }
+            this.medicines = [... new Set(medicijnenUser)];
+        },
         submitForm (e) {
             e.preventDefault();
+
+            if (!this.$refs.form.validate()) return;
+
             this.loading = true;
 
             const data = {
@@ -207,7 +231,10 @@ export default {
     computed: {
         getActionPlan() {
             return this.$store.getters.getActionPlan;
-        }
+        },
+        medicijnen_tijden(){
+            return this.$store.getters.medicijnen_tijden;
+        },
     }
 }
 </script>
