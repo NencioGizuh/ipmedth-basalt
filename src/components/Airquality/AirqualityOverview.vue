@@ -34,7 +34,6 @@
     </v-card>
     <v-skeleton-loader
       v-else
-      width="382"
       height="221"
       type="list-item-three-line, card-avatar"
     ></v-skeleton-loader>
