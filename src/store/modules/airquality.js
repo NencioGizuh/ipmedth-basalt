@@ -194,79 +194,55 @@ const actions = {
 
     colorScheme({commit}, colorValue) {
         commit("saveColor", "");
-        //this.color = "";
         const round = Math.round(colorValue);
         switch (round) {
           case 1:
             commit("saveColor", "#16B729");
             commit("saveairQualityPerHour", "Goed");
-            //this.color = "#16B729";
-            //this.airQualityPerHour = "Goed";
             break;
           case 2:
             commit("saveColor", "#19d12f");
             commit("saveairQualityPerHour", "Goed");
-            //this.color = "#19d12f";
-            //this.airQualityPerHour = "Goed";
             break;
           case 3:
             commit("saveColor", "#1bf234");
             commit("saveairQualityPerHour", "Goed");
-            //this.color = "#1bf234";
-            //this.airQualityPerHour = "Goed";
             break;
           case 4:
-            commit("saveColor", "#FFFECE");
+            commit("saveColor", "#ffda40");
             commit("saveairQualityPerHour", "Matig");
-            //this.color = "#FFFECE";
-            //this.airQualityPerHour = "Matig";
             break;
           case 5:
-            commit("saveColor", "#FFFF95");
+            commit("saveColor", "#ffda40");
             commit("saveairQualityPerHour", "Matig");
-            //this.color = "#FFFF95";
-            //this.airQualityPerHour = "Matig";
             break;
           case 6:
-            commit("saveColor", "#FEFF00");
+            commit("saveColor", "#ffda40");
             commit("saveairQualityPerHour", "Matig");
-            //this.color = "#FEFF00";
-            //this.airQualityPerHour = "Matig";
             break;
           case 7:
             commit("saveColor", "#FFCA01");
             commit("saveairQualityPerHour", "Onvoldoende");
-            //this.color = "#FFCA01";
-            //this.airQualityPerHour = "Onvoldoende";
             break;
           case 8:
             commit("saveColor", "#FF9601");
             commit("saveairQualityPerHour", "Onvoldoende");
-            //this.color = "#FF9601";
-            //this.airQualityPerHour = "Onvoldoende";
             break;
           case 9:
             commit("saveColor", "#FF4901");
             commit("saveairQualityPerHour", "Zeer slecht");
-            //this.color = "#FF4901";
-            //this.airQualityPerHour = "Zeer slecht";
             break;
           case 10:
             commit("saveColor", "#FE0A00");
             commit("saveairQualityPerHour", "Zeer slecht");
-            //this.color = "#FE0A00";
-            //this.airQualityPerHour = "Zeer slecht";
             break;
           case 11:
             commit("saveColor", "#640094");
             commit("saveairQualityPerHour", "Zeer slecht");
-            //this.color = "#640094";
-            //this.airQualityPerHour = "Zeer slecht";
             break;
           default:
             commit("saveColor", "");
             commit("saveairQualityPerHour", "Test");
-            this.color = "";
             break;
         }
     },

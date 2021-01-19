@@ -20,7 +20,7 @@
         <v-col class="pt-4 pb-4 pr-10 pl-10" cols="8" sm="8" md="8">
           <img
             align="center"
-            class=""
+            class="logo"
             src="@/assets/logos_en_blocks/logo-basalt.png"
           />
         </v-col>
@@ -104,7 +104,7 @@
           </v-btn>
           <v-dialog v-model="dialog" width="500">
             <v-card>
-              <v-card-title class="headline mb-2 red lighten-2">
+              <v-card-title class="headline mb-2 green lighten-2">
                 {{ registerErrors.statusText }}
               </v-card-title>
               <template v-if="errorStatus = true">
@@ -172,7 +172,7 @@ export default {
         ],
         patientnummerRules: [
           (v) => !!v || "Patientnummer is vereist",
-          (v) => /^\d{7}$/.test(v) || "Een patientnummer kan maar uit acht getallen bestaan",
+          (v) => /^\d{7}$/.test(v) || "Een patientnummer kan maar uit zeven getallen bestaan",
           (v) => /\d/.test(v) || "Patientnummer bestaat uit nummers",
         ],
         wachtwoordRules: [
@@ -187,10 +187,12 @@ export default {
         ],
         leeftijdRules: [
           (v) => !!v || "Leeftijd is vereist",
+          (v) => /^\d{2}$/.test(v) || "Leeftijd bestaat uit twee getallen",
           (v) => /\d/.test(v) || "Leeftijd bestaat uit cijfers",
         ],
         lengteRules: [
           (v) => !!v || "Lengte is vereist",
+          (v) => /^\d{3}$/.test(v) || "Lengte bestaat uit drie getallen",
           (v) => /\d/.test(v) || "Lengte bestaat uit cijfers",
         ],
       },
@@ -240,6 +242,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 .basalt-block-blue1 {
   position: fixed;
   top: 320px;
@@ -255,6 +258,5 @@ export default {
   position: fixed;
   top: -100px;
   left: -50px;
-  z-index: 0;
 }
 </style>
