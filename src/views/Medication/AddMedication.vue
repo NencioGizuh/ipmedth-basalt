@@ -37,7 +37,7 @@ export default {
     computed: {
         medicijnen(){
             return this.$store.getters.medicijnen;
-        },
+        }, 
         medicijn_categorieen(){
             return this.$store.getters.medicijn_categorieen;
         },

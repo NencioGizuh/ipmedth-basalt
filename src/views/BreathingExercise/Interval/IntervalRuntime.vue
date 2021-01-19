@@ -13,19 +13,26 @@
 <script>
 export default {
   name: "IntervalRuntime",
+  computed: {
+    getIntervalCompleted(){
+      return this.$store.getters.getIntervalCompleted;
+    }
+  },
   data() {
     return {
-      timerCount: 15,
+      date: new Date().toISOString().substr(0, 10),
+      timerCount: 60,
       timeout: null,
       test1: "", 
-      completedID2: false,
-      takenCounter: ""
+      takenCounter: "",
+      intervalCompleted: this.$store.getters.getIntervalCompleted
     };
   },
   watch: {
     timerCount: {
       handler(value) {
         if (value > 0) {
+          this.intervalCompleted = true;
           setTimeout(() => {
             this.timerCount--;
             console.log(this.timerCount);
@@ -38,18 +45,17 @@ export default {
   created() {
     this.timeout = setTimeout(
       function () {
-        this.completedID2 = true;
-        this.takenCounter = localStorage.getItem('takenCounter');
-          if (this.takenCounter === null) {
-            this.takenCounter = 0;
-          } else {
-            this.takenCounter++;
-          }
-        localStorage.setItem('completedID2', this.completedID2)
-        localStorage.setItem('takenCounter', this.takenCounter)
+        const data = {
+          date: this.date,
+          cp_measurement_one: this.$store.getters.getCp1Meting,
+          cp_measurement_two: this.$store.getters.getCp2Meting,
+          interval: this.intervalCompleted
+        }
+        this.$store.commit('setIntervalCompleted', this.intervalCompleted);
+        this.$store.dispatch("addMeting", data);
         this.$router.push({ path: "/breathingexercise" });
       }.bind(this),
-      15000
+      2000
     );
   },
   beforeRouteEnter(to, from, next) {

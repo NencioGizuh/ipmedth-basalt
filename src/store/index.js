@@ -9,6 +9,7 @@ import sharedata from "./modules/share_data";
 import medicijnen from "./modules/medicijnen.js"
 import airquality from "./modules/airquality";
 import registraties from "./modules/registraties";
+import breathingexercise from "./modules/breathingexercise";
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
       sharedata,
       medicijnen,
       registraties,
-      airquality
+      airquality,
+      breathingexercise
   }
 })

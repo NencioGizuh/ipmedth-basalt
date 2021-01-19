@@ -15,20 +15,22 @@
 <script>
 export default {
   name: "CP2start",
-  myStorage: window.localStorage,
   data() {
     return {
+      date: new Date().toISOString().substr(0, 10),
       elapsedTime: 0,
       timeInSeconds: 0,
       timer: undefined,
       timerState: 0,
-      completedID3: false, 
-      takenCounter: ""
+      cp2Completed: this.$store.getters.getCp2Completed,
+      cp2Meting: this.$store.getters.getCp2Meting
     };
   },
   watch: {
     todos: {
-      handler() { console.log('CP metingen zijn veranderd'); },
+      handler() {
+        console.log("CP metingen zijn veranderd");
+      },
       deep: true,
     },
   },
@@ -39,6 +41,12 @@ export default {
       const utc = date.toUTCString();
       return utc.substr(utc.indexOf(":") - -1, 5);
     },
+    getCp2Completed(){
+      return this.$store.getters.getCp2Completed;
+    }, 
+    getCp2Meting(){
+      return this.$store.getters.getCp2Meting;
+    }
   },
   methods: {
     start() {
@@ -54,7 +62,7 @@ export default {
       }
     },
     stop() {
-      if (this.timerState == 1){
+      if (this.timerState == 1) {
         clearInterval(this.timer);
         console.log("De timer is gestopt");
         this.timerState = 2;
@@ -62,19 +70,15 @@ export default {
     },
     verzend() {
       if (this.timerState == 2) {
+        const data = {
+          date: this.date,
+          cp_measurement_one: this.$store.getters.getCp1Meting,
+          cp_measurement_two: this.timeInSeconds
+        }
         console.log("Meting met waarde: " + this.timeInSeconds);
-        localStorage.setItem('CPMeting2', this.timeInSeconds);
-        this.completedID3 = true;
-
-         this.takenCounter = localStorage.getItem('takenCounter');
-          if (this.takenCounter === null) {
-            this.takenCounter = 0;
-          } else {
-            this.takenCounter++;
-          }
-        
-        localStorage.setItem('completedID3', this.completedID3);
-        localStorage.setItem('takenCounter', this.takenCounter);
+        this.$store.commit('setCp2Meting', this.timeInSeconds);
+        this.$store.commit('setCp2Completed');
+        this.$store.dispatch("addMeting", data);
         this.$router.push({ path: "/breathingexercise/cpstatistics" });
       }
     },
