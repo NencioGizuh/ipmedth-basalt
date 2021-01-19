@@ -18,9 +18,9 @@
       <h4>Eventuele opmerkingen/verklaringen</h4>
       <h5>Bijvoorbeeld een verklaring voor een lage peak flow</h5>
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-container class="pt-0 lighten-5 mb-6">
+        <v-container class="pt-0 lighten-5">
           <v-row class="mt-5">
-            <v-textarea v-model="form.opmerking" outlined color="teal">
+            <v-textarea v-model="form.opmerking" outlined>
               <template v-slot:label>
                 <div>Opmerking <small>(optioneel)</small></div>
               </template>
@@ -145,7 +145,9 @@ export default {
 
     sendData(){
       this.$store.dispatch("saveSharePeakflow", this.form);
-
+      setTimeout(() => {
+          this.$router.push({path: "/peakflow", query: {share: 'succes'}});
+      }, 500)
     },
     slctName(selectedRow){
       this.selectedRows = selectedRow;

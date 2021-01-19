@@ -116,7 +116,7 @@
                         label="Meting 1"
                         outlined
                         dense
-                        :rules="required"
+                        :rules="rules.peakflow"
                         type="number"
                     />
                     <v-text-field
@@ -124,7 +124,7 @@
                         label="Meting 2"
                         outlined
                         dense
-                        :rules="required"
+                        :rules="rules.peakflow"
                         type="number"
                     />
                     <v-text-field
@@ -132,7 +132,7 @@
                         label="Meting 3"
                         outlined
                         dense
-                        :rules="required"
+                        :rules="rules.peakflow"
                         type="number"
                         hide-details="auto"
                     />
@@ -200,9 +200,13 @@ export default {
             measurementThree: null,
             takenMedicines: "no",
             explanation: null,
-            required: [
-                value => !!value || 'Verplicht in te vullen.',
-            ],
+            rules: {
+                peakflow: [
+                    (v) => !!v || "Verplicht in te vullen.",
+                    (v) => /\d/.test(v) || "Peakflow bestaat uit getallen",
+                    (v) => /^\d{3}$/.test(v) || "Peakflow kan maar uit drie getallen bestaan",
+                ],
+            },
             loading: false,
         }
     },

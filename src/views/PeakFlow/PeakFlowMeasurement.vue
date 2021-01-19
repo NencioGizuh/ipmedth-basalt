@@ -6,7 +6,7 @@
             </v-card-title>
             <v-card-text>
                     <p class="font-weight-bold mb-1">Metingen:</p>
-                    <v-row>
+                    <v-row class="my-2">
                         <v-col>
                             <peak-flow-measurement-circle :value="getPeakFlowById.measurement_one" />
                         </v-col>

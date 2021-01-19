@@ -282,7 +282,6 @@ export default {
         setTimeout(() => {
             if (this.$route.query.reset === "succes") {
                 this.$router.replace('/actionplan');
-                console.log("Hallo")
                 this.snackbar = true;
             }
         }, 200);

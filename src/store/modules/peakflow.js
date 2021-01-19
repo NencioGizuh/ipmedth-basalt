@@ -88,7 +88,7 @@ const actions = {
         }).then(res => {
             commit("addPeakFlow", res.data);
             commit('orderPeakFlow');
-            router.push("/peakflow");
+            router.push({path: "/peakflow", query: {add: 'succes'}});
         })
     },
     deletePeakFlow({commit}, id) {
