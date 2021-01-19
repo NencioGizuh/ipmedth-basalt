@@ -38,7 +38,8 @@ const mutations = {
         state.current_selected_medicijn.title = payload;
     },
     setMedicationTimes: (state, payload) => {
-        state.medicijnen_tijden.push(payload);
+        // state.medicijnen_tijden.push(payload);
+        state.medicijnen_tijden = payload;
     },
     setMedication: (state, payload) => {
         state.medicijnenInDB = payload;
@@ -94,7 +95,11 @@ const actions = {
             }
         }).then(function (response) {
             //let data_medicatie_user_id = response.data.filter(i => i.user_id == data);
-            commit("setMedicationTimes", response.data);
+            const data = response.data.sort((a,b) => {
+                return (a.time < b.time) ? -1 : ((a.time > b.time) ? 1 : 0);
+            });
+
+            commit("setMedicationTimes", data);
         }).catch(function (error) {
             console.log(error);
         })
